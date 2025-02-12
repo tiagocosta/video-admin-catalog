@@ -1,8 +1,8 @@
 package com.tcs.admin.catalog.application.category.create;
 
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
-import com.tcs.admin.catalog.domain.exceptions.DomainException;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +26,11 @@ public class CreateCategoryUseCaseTest {
 
     @InjectMocks
     private DefaultCreateCategoryUseCase useCase;
+
+    @BeforeEach
+    void cleanUp() {
+        Mockito.reset(categoryGateway);
+    }
 
     @Test
     public void givenValidCommand_whenCallsCreateCategory_thenReturnCategoryId() {
@@ -57,14 +62,13 @@ public class CreateCategoryUseCaseTest {
 
     @Test
     public void givenInvalidName_whenCallsCreateCategory_thenReturnDomainException() {
-        final String expectedName = null;
         final var expectedDescription = "Most watched";
         final var expectedIsActive = true;
         final var expectedErrorMessage  = "'name' should not be null";
         final var expectedErrorCount  = 1;
 
         final var aCommand =
-                CreateCategoryCommand.with(expectedName, expectedDescription, expectedIsActive);
+                CreateCategoryCommand.with(null, expectedDescription, expectedIsActive);
 
         final var notification = useCase.execute(aCommand).getLeft();
 
