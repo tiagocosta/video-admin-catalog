@@ -1,6 +1,5 @@
 package com.tcs.admin.catalog.application.category.delete;
 
-import com.tcs.admin.catalog.application.category.create.DefaultUpdateCategoryUseCase;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;

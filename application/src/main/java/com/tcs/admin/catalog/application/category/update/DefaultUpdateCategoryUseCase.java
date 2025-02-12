@@ -1,8 +1,5 @@
-package com.tcs.admin.catalog.application.category.create;
+package com.tcs.admin.catalog.application.category.update;
 
-import com.tcs.admin.catalog.application.category.update.UpdateCategoryCommand;
-import com.tcs.admin.catalog.application.category.update.UpdateCategoryOutput;
-import com.tcs.admin.catalog.application.category.update.UpdateCategoryUseCase;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
