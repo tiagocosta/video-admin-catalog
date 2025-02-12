@@ -2,6 +2,7 @@ package com.tcs.admin.catalog.application.category.create;
 
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
+import com.tcs.admin.catalog.domain.validation.handler.Notification;
 import com.tcs.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 
 import java.util.Objects;
@@ -17,7 +18,12 @@ public class DefaultCreateCategoryUseCase extends CreateCategoryUseCase {
     @Override
     public CreateCategoryOutput execute(final CreateCategoryCommand aCommand) {
         final var aCategory = Category.newCategory(aCommand.name(), aCommand.description(), aCommand.isActive());
-        aCategory.validate(new ThrowsValidationHandler());
+        final var notification = Notification.create();
+        aCategory.validate(notification);
+
+        if (notification.hasErrors()) {
+            // TODO
+        }
 
         return CreateCategoryOutput.from(this.categoryGateway.create(aCategory));
     }
