@@ -3,3 +3,9 @@ mysql:
   password: ${MYSQL_PASSWORD}
   schema: ${MYSQL_SCHEMA}
   url: ${MYSQL_URL}:${MYSQL_PORT}
+
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
