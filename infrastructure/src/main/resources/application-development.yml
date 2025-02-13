@@ -1,8 +1,8 @@
 mysql:
-  username: ${MYSQL_USER_NAME}
-  password: ${MYSQL_PASSWORD}
-  schema: ${MYSQL_SCHEMA}
-  url: ${MYSQL_URL}:${MYSQL_PORT}
+  username: root
+  password: 123456
+  schema: videos_adm
+  url: localhost:3306
 
 server:
   port: 8081
