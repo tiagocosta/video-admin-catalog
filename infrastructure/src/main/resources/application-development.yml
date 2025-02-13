@@ -1,3 +1,9 @@
+mysql:
+  username: ${MYSQL_USER_NAME}
+  password: ${MYSQL_PASSWORD}
+  schema: ${MYSQL_SCHEMA}
+  url: ${MYSQL_URL}:${MYSQL_PORT}
+
 server:
   port: 8081
   undertow:
