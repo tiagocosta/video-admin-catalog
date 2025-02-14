@@ -1,4 +1,4 @@
-package com.tcs.admin.catalog.infrastructure;
+package com.tcs.admin.catalog;
 
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;

@@ -9,6 +9,7 @@ import com.tcs.admin.catalog.application.category.update.UpdateCategoryUseCase;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryRepository;
+import com.tcs.admin.catalog.infrastructure.configuration.usecases.WebServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,7 +22,7 @@ import java.util.List;
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(WebServerConfig.class, args);
     }
 
 //    @Bean

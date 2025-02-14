@@ -1,14 +1,12 @@
 package com.tcs.admin.catalog.infrastructure.category.persistence;
 
 import com.tcs.admin.catalog.domain.category.Category;
-import com.tcs.admin.catalog.infrastructure.MySQLGatewayTest;
+import com.tcs.admin.catalog.MySQLGatewayTest;
 import org.hibernate.PropertyValueException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import java.beans.PropertyVetoException;
 
 @MySQLGatewayTest
 public class CategoryRepositoryTest {

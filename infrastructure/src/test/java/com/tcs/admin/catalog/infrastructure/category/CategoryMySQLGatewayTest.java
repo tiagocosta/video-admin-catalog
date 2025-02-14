@@ -3,7 +3,7 @@ package com.tcs.admin.catalog.infrastructure.category;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.category.CategorySearchQuery;
-import com.tcs.admin.catalog.infrastructure.MySQLGatewayTest;
+import com.tcs.admin.catalog.MySQLGatewayTest;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
