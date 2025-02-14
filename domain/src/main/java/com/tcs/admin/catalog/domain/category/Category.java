@@ -1,9 +1,11 @@
 package com.tcs.admin.catalog.domain.category;
 
 import com.tcs.admin.catalog.domain.AggregateRoot;
+import com.tcs.admin.catalog.domain.utils.InstantUtils;
 import com.tcs.admin.catalog.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Category extends AggregateRoot<CategoryID> implements Cloneable {
@@ -21,21 +23,21 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
             final String aDescription,
             final boolean isActive,
             final Instant aCreationDate,
-            final Instant aUpdateDate,
+            final Instant anUpdateDate,
             final Instant aDeletionDate
     ) {
         super(anId);
         this.name = aName;
         this.description = aDescription;
         this.active = isActive;
-        this.createdAt = aCreationDate;
-        this.updatedAt = aUpdateDate;
+        this.createdAt = Objects.requireNonNull(aCreationDate, "'createdAt' should not be null");
+        this.updatedAt = Objects.requireNonNull(anUpdateDate, "'updatedAt' should not be null");
         this.deletedAt = aDeletionDate;
     }
 
     public static Category newCategory(final String aName, final String aDescription, final boolean isActive) {
         final var id = CategoryID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
         return new Category(id, aName, aDescription, isActive, now, now, deletedAt);
     }
@@ -58,7 +60,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
             final String aDescription,
             final boolean isActive,
             final Instant aCreationDate,
-            final Instant aUpdateDate,
+            final Instant anUpdateDate,
             final Instant aDeletionDate
     ) {
         return new Category(
@@ -67,7 +69,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
                 aDescription,
                 isActive,
                 aCreationDate,
-                aUpdateDate,
+                anUpdateDate,
                 aDeletionDate
         );
     }
@@ -79,7 +81,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 
     public Category activate() {
         this.deletedAt = null;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         this.active = true;
 
         return this;
@@ -87,7 +89,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
 
     public Category deactivate() {
         if (this.deletedAt == null) {
-            this.deletedAt = Instant.now();
+            this.deletedAt = InstantUtils.now();
             this.updatedAt = this.deletedAt;
             this.active = false;
         }
@@ -107,7 +109,7 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
         }
         this.name = aName;
         this.description = aDescription;
-
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 

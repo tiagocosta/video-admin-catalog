@@ -5,6 +5,7 @@ import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.category.CategorySearchQuery;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
+import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +21,8 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Category create(Category aCategory) {
-        return null;
+    public Category create(final Category aCategory) {
+        return save(aCategory);
     }
 
     @Override
@@ -35,12 +36,18 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Category update(Category aCategory) {
-        return null;
+    public Category update(final Category aCategory) {
+        return save(aCategory);
     }
 
     @Override
     public Pagination<Category> findAll(CategorySearchQuery aQuery) {
         return null;
     }
+
+    private Category save(final Category aCategory) {
+        CategoryJpaEntity category = this.repository.save(CategoryJpaEntity.from(aCategory));
+        return category.toAggregate();
+    }
+
 }
