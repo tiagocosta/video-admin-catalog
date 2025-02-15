@@ -4,10 +4,14 @@ import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 
 public record CreateCategoryOutput(
-        CategoryID id
+        String id
 ) {
 
-    public static CreateCategoryOutput from(Category aCategory) {
-        return new CreateCategoryOutput(aCategory.getId());
+    public static CreateCategoryOutput from(final String id) {
+        return new CreateCategoryOutput(id);
+    }
+
+    public static CreateCategoryOutput from(final Category aCategory) {
+        return new CreateCategoryOutput(aCategory.getId().getValue());
     }
 }

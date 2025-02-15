@@ -1,6 +1,7 @@
 package com.tcs.admin.catalog.infrastructure.api;
 
 import com.tcs.admin.catalog.domain.pagination.Pagination;
+import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -24,7 +25,7 @@ public interface CategoryAPI {
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             @ApiResponse(responseCode = "500", description = "Internal server error"),
     })
-    ResponseEntity<?> createCategory();
+    ResponseEntity<?> createCategory(@RequestBody CreateCategoryApiInput input);
 
     @GetMapping
     @Operation(summary = "List all categories - filtered and paginated")
