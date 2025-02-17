@@ -1,13 +1,8 @@
 package com.tcs.admin.catalog;
 
-import com.tcs.admin.catalog.infrastructure.configuration.usecases.WebServerConfig;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import com.tcs.admin.catalog.infrastructure.configuration.WebServerConfig;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.WebServer;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.lang.annotation.*;
 

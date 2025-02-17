@@ -152,6 +152,7 @@ public class ListCategoriesUseCaseIT {
             final int expectedPerPage,
             final int expectedItemsCount,
             final long expectedTotal,
+
             final String expectedCategoriesNames
     ) {
         final var expectedSort = "name";
