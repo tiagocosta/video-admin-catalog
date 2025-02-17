@@ -71,4 +71,14 @@ public interface CategoryAPI {
             @PathVariable  String id,
             @RequestBody CreateCategoryApiInput input
     );
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete a category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Category was not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+    })
+    void deleteById(@PathVariable  String id);
 }

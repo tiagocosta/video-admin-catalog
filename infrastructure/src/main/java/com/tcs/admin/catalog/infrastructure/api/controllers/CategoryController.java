@@ -3,10 +3,12 @@ package com.tcs.admin.catalog.infrastructure.api.controllers;
 import com.tcs.admin.catalog.application.category.create.CreateCategoryCommand;
 import com.tcs.admin.catalog.application.category.create.CreateCategoryOutput;
 import com.tcs.admin.catalog.application.category.create.CreateCategoryUseCase;
+import com.tcs.admin.catalog.application.category.delete.DeleteCategoryUseCase;
 import com.tcs.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
 import com.tcs.admin.catalog.application.category.update.UpdateCategoryCommand;
 import com.tcs.admin.catalog.application.category.update.UpdateCategoryOutput;
 import com.tcs.admin.catalog.application.category.update.UpdateCategoryUseCase;
+import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
 import com.tcs.admin.catalog.infrastructure.api.CategoryAPI;
@@ -26,15 +28,18 @@ public class CategoryController implements CategoryAPI {
     private final CreateCategoryUseCase createCategoryUseCase;
     private final GetCategoryByIdUseCase getCategoryByIdUseCase;
     private final UpdateCategoryUseCase updateCategoryUseCase;
+    private final DeleteCategoryUseCase deleteCategoryUseCase;
 
     public CategoryController(
             final CreateCategoryUseCase createCategoryUseCase,
             final GetCategoryByIdUseCase getCategoryByIdUseCase,
-            final UpdateCategoryUseCase updateCategoryUseCase
+            final UpdateCategoryUseCase updateCategoryUseCase,
+            final DeleteCategoryUseCase deleteCategoryUseCase
     ) {
         this.createCategoryUseCase = Objects.requireNonNull(createCategoryUseCase);
         this.getCategoryByIdUseCase = Objects.requireNonNull(getCategoryByIdUseCase);
         this.updateCategoryUseCase = Objects.requireNonNull(updateCategoryUseCase);
+        this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
     }
 
     @Override
@@ -81,6 +86,11 @@ public class CategoryController implements CategoryAPI {
 
         return this.updateCategoryUseCase.execute(aCommand)
                 .fold(onError, onSuccess);
+    }
+
+    @Override
+    public void deleteById(final String id) {
+        this.deleteCategoryUseCase.execute(id);
     }
 }
 

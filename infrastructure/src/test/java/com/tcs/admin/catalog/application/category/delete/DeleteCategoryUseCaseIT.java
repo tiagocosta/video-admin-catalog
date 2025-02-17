@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 @IntegrationTest
-public class DeleteUseCaseCategoryIT {
+public class DeleteCategoryUseCaseIT {
 
     @Autowired
     private DeleteCategoryUseCase useCase;
