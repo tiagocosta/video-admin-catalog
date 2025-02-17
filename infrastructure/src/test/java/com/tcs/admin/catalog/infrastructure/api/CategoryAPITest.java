@@ -4,12 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.admin.catalog.ControllerTest;
 import com.tcs.admin.catalog.application.category.create.CreateCategoryOutput;
 import com.tcs.admin.catalog.application.category.create.CreateCategoryUseCase;
+import com.tcs.admin.catalog.application.category.retrieve.get.CategoryOutput;
+import com.tcs.admin.catalog.application.category.retrieve.get.GetCategoryByIdUseCase;
+import com.tcs.admin.catalog.domain.category.Category;
+import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
 import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
 import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
 import io.vavr.API;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +40,9 @@ public class CategoryAPITest {
 
     @MockitoBean
     private CreateCategoryUseCase createCategoryUseCase;
+
+    @MockitoBean
+    private GetCategoryByIdUseCase getCategoryByIdUseCase;
 
     @Test
     public void givenValidCommand_whenCallsCreateCategory_thenReturnCategoryId() throws Exception {
@@ -137,4 +145,44 @@ public class CategoryAPITest {
         ));
     }
 
+    @Test
+    public void givenValidId_whenCallGetCategory_thenReturnCategory() throws Exception {
+        final var expectedName = "Movies";
+        final var expectedDescription = "Most watched";
+        final var expectedIsActive = true;
+
+        final var aCategory = Category.newCategory(expectedName, expectedDescription, expectedIsActive);
+        final var expectedId = aCategory.getId().getValue();
+
+        when(getCategoryByIdUseCase.execute(any()))
+                .thenReturn(CategoryOutput.from(aCategory));
+
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+
+        final var response = this.mockMvc.perform(request)
+                .andDo(print());
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId)))
+                .andExpect(jsonPath("$.name", Matchers.equalTo(expectedName)))
+                .andExpect(jsonPath("$.description", Matchers.equalTo(expectedDescription)))
+                .andExpect(jsonPath("$.active", Matchers.equalTo(expectedIsActive)))
+                .andExpect(jsonPath("$.created_at", Matchers.equalTo(aCategory.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.updated_at", Matchers.equalTo(aCategory.getUpdatedAt().toString())))
+                .andExpect(jsonPath("$.deleted_at", Matchers.equalTo(aCategory.getDeletedAt())));
+    }
+
+    @Test
+    public void givenInvalidId_whenCallGetCategory_thenReturnNotFound() throws Exception {
+        final var expectedId = CategoryID.from("123");
+        final var expectedErrorMessage = "Category with ID %s not found".formatted(expectedId.getValue());
+
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+
+        final var response = this.mockMvc.perform(request)
+                .andDo(print());
+
+        response.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", Matchers.equalTo(expectedErrorMessage)));
+    }
 }
