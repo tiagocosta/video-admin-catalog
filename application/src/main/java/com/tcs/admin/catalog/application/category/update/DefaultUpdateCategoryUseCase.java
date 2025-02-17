@@ -4,6 +4,7 @@ import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
+import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
 import io.vavr.control.Either;
@@ -37,10 +38,8 @@ public class DefaultUpdateCategoryUseCase extends UpdateCategoryUseCase {
         return notification.hasErrors() ? Left(notification) : update(aCategory);
     }
 
-    private static Supplier<DomainException> notFound(CategoryID anId) {
-        return () -> DomainException.with(
-                new Error("Category with ID %s not found".formatted(anId.getValue()))
-        );
+    private static Supplier<NotFoundException> notFound(CategoryID anId) {
+        return () -> NotFoundException.with(Category.class, anId);
     }
 
     private Either<Notification, UpdateCategoryOutput> update(final Category aCategory) {

@@ -55,4 +55,20 @@ public interface CategoryAPI {
             @ApiResponse(responseCode = "500", description = "Internal server error"),
     })
     CategoryApiOutput getById(@PathVariable String id);
+
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Update a category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Updated successfully"),
+            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+    })
+    ResponseEntity<?> updateCategory(
+            @PathVariable  String id,
+            @RequestBody CreateCategoryApiInput input
+    );
 }

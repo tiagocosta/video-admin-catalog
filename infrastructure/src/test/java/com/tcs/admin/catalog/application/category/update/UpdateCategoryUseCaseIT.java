@@ -182,7 +182,7 @@ public class UpdateCategoryUseCaseIT {
         final var expectedIsActive = false;
         final var expectedId = "123";
         final var expectedErrorCount = 1;
-        final var expectedErrorMessage = "Category with ID %s not found".formatted(expectedId);
+        final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId);
 
         final var aCommand = UpdateCategoryCommand.with(
                 expectedId,
@@ -194,8 +194,7 @@ public class UpdateCategoryUseCaseIT {
         final var actualException =
                 Assertions.assertThrows(DomainException.class, () -> useCase.execute(aCommand));
 
-        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
     }
 
     private void save(final Category... aCategories) {
