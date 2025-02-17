@@ -9,6 +9,7 @@ import com.tcs.admin.catalog.application.category.retrieve.get.GetCategoryByIdUs
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
+import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
 import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryApiInput;
@@ -176,10 +177,10 @@ public class CategoryAPITest {
     @Test
     public void givenInvalidId_whenCallGetCategory_thenReturnNotFound() throws Exception {
         final var expectedId = CategoryID.from("123");
-        final var expectedErrorMessage = "Category with ID %s not found".formatted(expectedId.getValue());
+        final var expectedErrorMessage = "Category with ID %s was not found".formatted(expectedId.getValue());
 
         when(getCategoryByIdUseCase.execute(any()))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenThrow(NotFoundException.with(Category.class, expectedId));
 
         final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId)
                 .contentType(MediaType.APPLICATION_JSON);
