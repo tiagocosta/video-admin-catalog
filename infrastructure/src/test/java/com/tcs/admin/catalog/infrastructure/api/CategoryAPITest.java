@@ -157,7 +157,8 @@ public class CategoryAPITest {
         when(getCategoryByIdUseCase.execute(any()))
                 .thenReturn(CategoryOutput.from(aCategory));
 
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId)
+                .contentType(MediaType.APPLICATION_JSON);
 
         final var response = this.mockMvc.perform(request)
                 .andDo(print());
@@ -166,7 +167,7 @@ public class CategoryAPITest {
                 .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId)))
                 .andExpect(jsonPath("$.name", Matchers.equalTo(expectedName)))
                 .andExpect(jsonPath("$.description", Matchers.equalTo(expectedDescription)))
-                .andExpect(jsonPath("$.active", Matchers.equalTo(expectedIsActive)))
+                .andExpect(jsonPath("$.is_active", Matchers.equalTo(expectedIsActive)))
                 .andExpect(jsonPath("$.created_at", Matchers.equalTo(aCategory.getCreatedAt().toString())))
                 .andExpect(jsonPath("$.updated_at", Matchers.equalTo(aCategory.getUpdatedAt().toString())))
                 .andExpect(jsonPath("$.deleted_at", Matchers.equalTo(aCategory.getDeletedAt())));
@@ -177,7 +178,11 @@ public class CategoryAPITest {
         final var expectedId = CategoryID.from("123");
         final var expectedErrorMessage = "Category with ID %s not found".formatted(expectedId.getValue());
 
-        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId);
+        when(getCategoryByIdUseCase.execute(any()))
+                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+
+        final var request = MockMvcRequestBuilders.get("/categories/{id}", expectedId)
+                .contentType(MediaType.APPLICATION_JSON);
 
         final var response = this.mockMvc.perform(request)
                 .andDo(print());
