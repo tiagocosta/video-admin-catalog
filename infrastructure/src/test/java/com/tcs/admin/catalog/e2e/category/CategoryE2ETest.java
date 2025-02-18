@@ -138,9 +138,9 @@ public class CategoryE2ETest {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
         Assertions.assertEquals(0, this.categoryRepository.count());
 
-        final var actualId1 = givenACategory("Movies", "Movies", true);
-        final var actualId2 = givenACategory("Documentaries", "Docs", true);
-        final var actualId3 = givenACategory("Series", "Series", true);
+        givenACategory("Movies", "Movies", true);
+        givenACategory("Documentaries", "Docs", true);
+        givenACategory("Series", "Series", true);
 
         listCategories(0, 3, "", "description", "desc")
                 .andExpect(status().isOk())
@@ -173,7 +173,7 @@ public class CategoryE2ETest {
                 .queryParam("perPage", String.valueOf(perPage))
                 .queryParam("search", search)
                 .queryParam("sort", sort)
-                .queryParam("direction", direction)
+                .queryParam("dir", direction)
                 .contentType(MediaType.APPLICATION_JSON);
 
         return this.mvc.perform(aRequest);
