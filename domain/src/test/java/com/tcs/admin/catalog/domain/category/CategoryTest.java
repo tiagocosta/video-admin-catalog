@@ -95,8 +95,14 @@ public class CategoryTest {
     @Test
     public void givenMoreThan255LengthName_whenCallNewCategory_thenReceiveError() {
         final String expectedName = """
-                Neste sentido, a consulta aos diversos militantes faz parte de um processo de gerenciamento de alternativas às soluções ortodoxas.
-                É claro que a complexidade dos estudos efetuados apresenta tendências no sentido de aprovar a manutenção dos níveis de motivação departamental.
+                There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                 alteration in some form, by injected humour, or randomised words which don't look even slightly
+                 believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything
+                 embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to
+                 repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a
+                 dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate
+                 Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition,
+                 injected humour, or non-characteristic words etc.
                 """;
         final var expectedDescription = "Most watched";
         final var expectedIsActive = true;
