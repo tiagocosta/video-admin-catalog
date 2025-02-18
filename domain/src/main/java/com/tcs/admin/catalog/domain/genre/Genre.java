@@ -1,9 +1,11 @@
 package com.tcs.admin.catalog.domain.genre;
 
 import com.tcs.admin.catalog.domain.AggregateRoot;
+import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.category.CategoryValidator;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
+import com.tcs.admin.catalog.domain.utils.InstantUtils;
 import com.tcs.admin.catalog.domain.validation.ValidationHandler;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
 
@@ -119,5 +121,23 @@ public class Genre extends AggregateRoot<GenreID> {
 
     public Instant getDeletedAt() {
         return deletedAt;
+    }
+
+    public Genre activate() {
+        this.deletedAt = null;
+        this.updatedAt = InstantUtils.now();
+        this.active = true;
+
+        return this;
+    }
+
+    public Genre deactivate() {
+        if (this.deletedAt == null) {
+            this.deletedAt = InstantUtils.now();
+            this.updatedAt = this.deletedAt;
+            this.active = false;
+        }
+
+        return this;
     }
 }
