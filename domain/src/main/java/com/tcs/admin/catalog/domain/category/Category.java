@@ -100,9 +100,9 @@ public class Category extends AggregateRoot<CategoryID> implements Cloneable {
     public Category update(
             final String aName,
             final String aDescription,
-            final boolean isAcitve
+            final boolean isActive
     ) {
-        if (isAcitve) {
+        if (isActive) {
             activate();
         } else {
             deactivate();
