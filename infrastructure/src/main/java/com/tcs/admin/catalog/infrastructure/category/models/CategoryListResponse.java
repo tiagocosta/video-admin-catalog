@@ -9,7 +9,7 @@ public record CategoryListResponse(
         String name,
         String description,
         @JsonProperty("is_active") Boolean active,
-        @JsonProperty("created_at") Instant createdAt,
-        @JsonProperty("deleted_at") Instant deletedAt
+        Instant createdAt,
+        Instant deletedAt
 ) {
 }
