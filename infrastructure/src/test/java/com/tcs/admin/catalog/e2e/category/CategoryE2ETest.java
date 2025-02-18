@@ -4,6 +4,7 @@ import com.tcs.admin.catalog.E2ETest;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.infrastructure.category.models.CategoryResponse;
 import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import com.tcs.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryRepository;
 import com.tcs.admin.catalog.infrastructure.configuration.json.Json;
 import org.hamcrest.Matchers;
@@ -185,6 +186,96 @@ public class CategoryE2ETest {
         final var json = this.mvc.perform(aRequest)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", Matchers.equalTo("Category with ID 123 was not found")));
+    }
+
+    @Test
+    public void as_aCatalogAdmin_shouldBeAbleToUpdateCategoryByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.categoryRepository.count());
+
+        final var actualId = givenACategory("Movi", null, true);
+
+        final var expectedName = "Movies";
+        final var expectedDescription = "Most watched";
+        final var expectedIsActive = true;
+
+        final var updateCategoryRequest = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
+
+        final var aRequest = MockMvcRequestBuilders.put("/categories/{id}", actualId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(updateCategoryRequest));
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isOk());
+
+        final var actualCategory = categoryRepository.findById(actualId.getValue()).get();
+
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertNotNull(actualCategory.getCreatedAt());
+        Assertions.assertNotNull(actualCategory.getUpdatedAt());
+        Assertions.assertNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    public void as_aCatalogAdmin_shouldBeAbleToDeactivateCategoryByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.categoryRepository.count());
+
+        final var expectedName = "Movies";
+        final var expectedDescription = "Most watched";
+        final var expectedIsActive = false;
+
+        final var actualId = givenACategory(expectedName, expectedDescription, true);
+
+        final var updateCategoryRequest = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
+
+        final var aRequest = MockMvcRequestBuilders.put("/categories/{id}", actualId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(updateCategoryRequest));
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isOk());
+
+        final var actualCategory = categoryRepository.findById(actualId.getValue()).get();
+
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertNotNull(actualCategory.getCreatedAt());
+        Assertions.assertNotNull(actualCategory.getUpdatedAt());
+        Assertions.assertNotNull(actualCategory.getDeletedAt());
+    }
+
+    @Test
+    public void as_aCatalogAdmin_shouldBeAbleToActivateCategoryByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.categoryRepository.count());
+
+        final var expectedName = "Movies";
+        final var expectedDescription = "Most watched";
+        final var expectedIsActive = true;
+
+        final var actualId = givenACategory(expectedName, expectedDescription, false);
+
+        final var updateCategoryRequest = new UpdateCategoryRequest(expectedName, expectedDescription, expectedIsActive);
+
+        final var aRequest = MockMvcRequestBuilders.put("/categories/{id}", actualId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json.writeValueAsString(updateCategoryRequest));
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isOk());
+
+        final var actualCategory = categoryRepository.findById(actualId.getValue()).get();
+
+        Assertions.assertEquals(expectedName, actualCategory.getName());
+        Assertions.assertEquals(expectedDescription, actualCategory.getDescription());
+        Assertions.assertEquals(expectedIsActive, actualCategory.isActive());
+        Assertions.assertNotNull(actualCategory.getCreatedAt());
+        Assertions.assertNotNull(actualCategory.getUpdatedAt());
+        Assertions.assertNull(actualCategory.getDeletedAt());
     }
 
     private ResultActions listCategories(final int page, final int perPage) throws Exception {

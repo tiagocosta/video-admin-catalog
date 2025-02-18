@@ -16,6 +16,7 @@ import com.tcs.admin.catalog.infrastructure.api.CategoryAPI;
 import com.tcs.admin.catalog.infrastructure.category.models.CategoryListResponse;
 import com.tcs.admin.catalog.infrastructure.category.models.CategoryResponse;
 import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import com.tcs.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import com.tcs.admin.catalog.infrastructure.category.presenters.CategoryApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -83,7 +84,7 @@ public class CategoryController implements CategoryAPI {
     }
 
     @Override
-    public ResponseEntity<?> updateCategory(final String id, final CreateCategoryRequest input) {
+    public ResponseEntity<?> updateCategory(final String id, final UpdateCategoryRequest input) {
         final var aCommand = UpdateCategoryCommand.with(
                 id,
                 input.name(),

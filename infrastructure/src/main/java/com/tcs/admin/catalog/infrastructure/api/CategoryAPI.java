@@ -4,6 +4,7 @@ import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.infrastructure.category.models.CategoryListResponse;
 import com.tcs.admin.catalog.infrastructure.category.models.CategoryResponse;
 import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import com.tcs.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -70,7 +71,7 @@ public interface CategoryAPI {
     })
     ResponseEntity<?> updateCategory(
             @PathVariable  String id,
-            @RequestBody CreateCategoryRequest input
+            @RequestBody UpdateCategoryRequest input
     );
 
     @DeleteMapping("/{id}")
