@@ -1,9 +1,12 @@
 package com.tcs.admin.catalog.domain.genre;
 
+import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
-import com.tcs.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
+import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 public class GenreTest {
 
@@ -129,5 +132,46 @@ public class GenreTest {
         Assertions.assertTrue(updatedAt.isBefore(actualGenre.getUpdatedAt()));
         Assertions.assertNotNull(actualGenre.getUpdatedAt());
         Assertions.assertNull(actualGenre.getDeletedAt());
+    }
+
+    @Test
+    public void givenValidInactiveGenre_whenCallUpdate_thenReturnUpdatedGenre() {
+        final var expectedName = "Movies";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(CategoryID.from("123"));
+
+        final var actualGenre = Genre.newGenre("Movi", expectedIsActive);
+
+        final var createdAt = actualGenre.getCreatedAt();
+        final var updatedAt = actualGenre.getUpdatedAt();
+
+        Assertions.assertDoesNotThrow(() -> actualGenre.update(expectedName, expectedIsActive, expectedCategories));
+
+        Assertions.assertNotNull(actualGenre.getId());
+        Assertions.assertEquals(expectedName, actualGenre.getName());
+        Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
+        Assertions.assertEquals(expectedCategories, actualGenre.getCategories());
+        Assertions.assertEquals(createdAt, actualGenre.getCreatedAt());
+        Assertions.assertTrue(actualGenre.getUpdatedAt().isAfter(updatedAt));
+        Assertions.assertNull(actualGenre.getDeletedAt());
+    }
+
+    @Test
+    public void givenValidGenre_whenCallUpdateWithInvalidParams_thenReturnReceiveNotificationException() {
+        final String expectedName = null;
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(CategoryID.from("123"));
+
+        final var actualGenre= Genre.newGenre("Movi", expectedIsActive);
+
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var actualException = Assertions.assertThrows(NotificationException.class, () ->
+                actualGenre.update(expectedName, expectedIsActive, expectedCategories)
+        );
+
+        Assertions.assertEquals(expectedErrorCount, actualException.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, actualException.getErrors().get(0).message());
     }
 }

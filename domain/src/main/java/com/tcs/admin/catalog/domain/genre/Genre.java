@@ -39,12 +39,7 @@ public class Genre extends AggregateRoot<GenreID> {
         this.createdAt = aCreationDate;
         this.updatedAt = anUpdateDate;
         this.deletedAt = aDeletionDate;
-
-        final var notification = Notification.create();
-        validate(notification);
-        if (notification.hasErrors()) {
-            throw new NotificationException("Failed to create aggregate Genre", notification);
-        }
+        selfValidate();
     }
 
     public static Genre newGenre(final String aName, final boolean isActive) {
@@ -139,5 +134,30 @@ public class Genre extends AggregateRoot<GenreID> {
         }
 
         return this;
+    }
+
+    public Genre update(
+            final String aName,
+            final boolean isActive,
+            final List<CategoryID> categories
+    ) {
+        if (isActive) {
+            activate();
+        } else {
+            deactivate();
+        }
+        this.name = aName;
+        this.updatedAt = InstantUtils.now();
+        this.categories = new ArrayList<>(categories);
+        selfValidate();
+        return this;
+    }
+
+    private void selfValidate() {
+        final var notification = Notification.create();
+        validate(notification);
+        if (notification.hasErrors()) {
+            throw new NotificationException("Failed to create aggregate Genre", notification);
+        }
     }
 }
