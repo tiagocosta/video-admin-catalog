@@ -3,11 +3,10 @@ package com.tcs.admin.catalog.infrastructure.category;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
-import com.tcs.admin.catalog.domain.category.CategorySearchQuery;
+import com.tcs.admin.catalog.domain.pagination.SearchQuery;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryJpaEntity;
 import com.tcs.admin.catalog.infrastructure.category.persistence.CategoryRepository;
-import com.tcs.admin.catalog.infrastructure.utils.SpecificationUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -51,7 +50,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     }
 
     @Override
-    public Pagination<Category> findAll(final CategorySearchQuery aQuery) {
+    public Pagination<Category> findAll(final SearchQuery aQuery) {
         // Pagination
         final var page = PageRequest.of(
                 aQuery.page(),

@@ -1,6 +1,6 @@
-package com.tcs.admin.catalog.domain.category;
+package com.tcs.admin.catalog.domain.pagination;
 
-public record CategorySearchQuery(
+public record SearchQuery(
         int page,
         int perPage,
         String terms,

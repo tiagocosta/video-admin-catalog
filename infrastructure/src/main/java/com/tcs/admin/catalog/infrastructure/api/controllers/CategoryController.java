@@ -9,7 +9,7 @@ import com.tcs.admin.catalog.application.category.retrieve.list.ListCategoriesUs
 import com.tcs.admin.catalog.application.category.update.UpdateCategoryCommand;
 import com.tcs.admin.catalog.application.category.update.UpdateCategoryOutput;
 import com.tcs.admin.catalog.application.category.update.UpdateCategoryUseCase;
-import com.tcs.admin.catalog.domain.category.CategorySearchQuery;
+import com.tcs.admin.catalog.domain.pagination.SearchQuery;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
 import com.tcs.admin.catalog.infrastructure.api.CategoryAPI;
@@ -74,7 +74,7 @@ public class CategoryController implements CategoryAPI {
             final String sort,
             final String direction
     ) {
-        return this.listCategoriesUseCase.execute(new CategorySearchQuery(page, perPage, search, sort, direction))
+        return this.listCategoriesUseCase.execute(new SearchQuery(page, perPage, search, sort, direction))
                 .map(CategoryApiPresenter::present);
     }
 
