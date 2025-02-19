@@ -1,12 +1,11 @@
 package com.tcs.admin.catalog.application.category.retrieve.get;
 
 import com.tcs.admin.catalog.domain.category.Category;
-import com.tcs.admin.catalog.domain.category.CategoryID;
 
 import java.time.Instant;
 
 public record CategoryOutput(
-        CategoryID id,
+        String id,
         String name,
         String description,
         boolean isActive,
@@ -17,7 +16,7 @@ public record CategoryOutput(
 
     public static CategoryOutput from(final Category aCategory) {
        return new CategoryOutput(
-               aCategory.getId(),
+               aCategory.getId().getValue(),
                aCategory.getName(),
                aCategory.getDescription(),
                aCategory.isActive(),
