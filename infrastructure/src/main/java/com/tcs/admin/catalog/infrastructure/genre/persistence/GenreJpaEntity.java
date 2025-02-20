@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "genres")
@@ -72,9 +73,7 @@ public class GenreJpaEntity {
                 GenreID.from(this.id),
                 this.name,
                 this.active,
-                this.categories.stream()
-                        .map(it -> CategoryID.from(it.getId().getCategoryId()))
-                        .toList(),
+                getCategoryIDs(),
                 this.createdAt,
                 this.updatedAt,
                 this.deletedAt
@@ -111,6 +110,12 @@ public class GenreJpaEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public List<CategoryID> getCategoryIDs() {
+        return this.categories.stream()
+                .map(it -> CategoryID.from(it.getId().getCategoryId()))
+                .toList();
     }
 
     public Set<GenreCategoryJpaEntity> getCategories() {
