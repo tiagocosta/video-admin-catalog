@@ -63,11 +63,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
         // Dynamic search
         final var specifications = Optional.ofNullable(aQuery.terms())
                 .filter(str -> !str.isBlank())
-                .map(str -> {
-                    final Specification<CategoryJpaEntity> nameLike = like("name", str);
-                    final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
-                    return nameLike.or(descriptionLike);
-                })
+                .map(this::assembleSpecifications)
                 .orElse(null);
 
         final var pageResult = this.repository.findAll(specifications, page);
@@ -88,6 +84,12 @@ public class CategoryMySQLGateway implements CategoryGateway {
     private Category save(final Category aCategory) {
         CategoryJpaEntity category = this.repository.save(CategoryJpaEntity.from(aCategory));
         return category.toAggregate();
+    }
+
+    private Specification<CategoryJpaEntity> assembleSpecifications(String str) {
+        final Specification<CategoryJpaEntity> nameLike = like("name", str);
+        final Specification<CategoryJpaEntity> descriptionLike = like("description", str);
+        return nameLike.or(descriptionLike);
     }
 
 }
