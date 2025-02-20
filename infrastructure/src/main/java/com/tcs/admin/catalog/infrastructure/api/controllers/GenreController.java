@@ -3,6 +3,8 @@ package com.tcs.admin.catalog.infrastructure.api.controllers;
 import com.tcs.admin.catalog.application.genre.create.CreateGenreCommand;
 import com.tcs.admin.catalog.application.genre.create.CreateGenreUseCase;
 import com.tcs.admin.catalog.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.tcs.admin.catalog.application.genre.update.UpdateGenreCommand;
+import com.tcs.admin.catalog.application.genre.update.UpdateGenreUseCase;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.infrastructure.api.GenreAPI;
 import com.tcs.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
@@ -21,13 +23,16 @@ public class GenreController implements GenreAPI {
 
     private final CreateGenreUseCase createGenreUseCase;
     private final GetGenreByIdUseCase getGenreByIdUseCase;
+    private final UpdateGenreUseCase updateGenreUseCase;
 
     public GenreController(
             final CreateGenreUseCase createGenreUseCase,
-            final GetGenreByIdUseCase getGenreByIdUseCase
+            final GetGenreByIdUseCase getGenreByIdUseCase,
+            final UpdateGenreUseCase updateGenreUseCase
     ) {
         this.createGenreUseCase = Objects.requireNonNull(createGenreUseCase);
         this.getGenreByIdUseCase = Objects.requireNonNull(getGenreByIdUseCase);
+        this.updateGenreUseCase = Objects.requireNonNull(updateGenreUseCase);
     }
 
     @Override
@@ -57,7 +62,10 @@ public class GenreController implements GenreAPI {
 
     @Override
     public ResponseEntity<?> update(final String id, final UpdateGenreRequest input) {
-        return null;
+        final var aCommand =
+                UpdateGenreCommand.with(id, input.name(), input.active(), input.categories());
+        final var output = updateGenreUseCase.execute(aCommand);
+        return ResponseEntity.ok(output);
     }
 
     @Override
