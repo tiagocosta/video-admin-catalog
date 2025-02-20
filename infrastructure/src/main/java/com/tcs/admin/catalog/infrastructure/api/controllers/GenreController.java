@@ -1,5 +1,7 @@
 package com.tcs.admin.catalog.infrastructure.api.controllers;
 
+import com.tcs.admin.catalog.application.genre.create.CreateGenreCommand;
+import com.tcs.admin.catalog.application.genre.create.CreateGenreUseCase;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.infrastructure.api.GenreAPI;
 import com.tcs.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
@@ -9,12 +11,27 @@ import com.tcs.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+import java.util.Objects;
+
 @RestController
 public class GenreController implements GenreAPI {
 
+    private final CreateGenreUseCase createGenreUseCase;
+
+    public GenreController(
+            final CreateGenreUseCase createGenreUseCase
+    ) {
+        this.createGenreUseCase = Objects.requireNonNull(createGenreUseCase);
+    }
+
     @Override
     public ResponseEntity<?> create(final CreateGenreRequest input) {
-        return null;
+        final var aCommand =
+                CreateGenreCommand.with(input.name(), input.active(), input.categories());
+        final var output = createGenreUseCase.execute(aCommand);
+        return ResponseEntity.created(URI.create("/genres/" + output.id()))
+                .body(output);
     }
 
     @Override
