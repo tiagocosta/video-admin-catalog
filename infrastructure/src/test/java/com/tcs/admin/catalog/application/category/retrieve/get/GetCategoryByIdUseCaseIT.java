@@ -1,8 +1,6 @@
 package com.tcs.admin.catalog.application.category.retrieve.get;
 
 import com.tcs.admin.catalog.IntegrationTest;
-import com.tcs.admin.catalog.application.category.create.CreateCategoryCommand;
-import com.tcs.admin.catalog.application.category.create.CreateCategoryUseCase;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
@@ -17,11 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 
 @IntegrationTest
 public class GetCategoryByIdUseCaseIT {
@@ -55,7 +52,7 @@ public class GetCategoryByIdUseCaseIT {
 
         final var actualGetCategoryOutput = useCase.execute(expectedId.getValue());
 
-        Assertions.assertEquals(expectedId, actualGetCategoryOutput.id());
+        Assertions.assertEquals(expectedId.getValue(), actualGetCategoryOutput.id());
         Assertions.assertEquals(expectedName, actualGetCategoryOutput.name());
         Assertions.assertEquals(expectedDescription, actualGetCategoryOutput.description());
         Assertions.assertEquals(expectedIsActive, actualGetCategoryOutput.isActive());
