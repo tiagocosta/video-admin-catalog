@@ -7,6 +7,10 @@ import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.domain.pagination.SearchQuery;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreRepository;
+import com.tcs.admin.catalog.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -46,10 +50,32 @@ public class GenreMySQLGateway implements GenreGateway {
 
     @Override
     public Pagination<Genre> findAll(SearchQuery aQuery) {
-        return null;
+        final var page = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
+        );
+
+        final var specifications = Optional.ofNullable(aQuery.terms())
+                .filter(str -> !str.isBlank())
+                .map(this::assembleSpecification)
+                .orElse(null);
+
+        final var pageResult = this.genreRepository.findAll(specifications, page);
+
+        return new Pagination<>(
+                pageResult.getNumber(),
+                pageResult.getSize(),
+                pageResult.getTotalElements(),
+                pageResult.map(GenreJpaEntity::toAggregate).stream().toList()
+        );
     }
 
     private Genre save(Genre aGenre) {
         return this.genreRepository.save(GenreJpaEntity.from(aGenre)).toAggregate();
+    }
+
+    private Specification<GenreJpaEntity> assembleSpecification(final String terms) {
+        return SpecificationUtils.like("name", terms);
     }
 }
