@@ -332,6 +332,47 @@ public class GenreMySQLGatewayTest {
         Assertions.assertEquals(0, genreRepository.count());
     }
 
+    @Test
+    public void givenPrePersistedGenre_whenCallsFindById_thenReturnGenre() {
+        final var aCategory1 = categoryGateway.create(
+                Category.newCategory("Movies", null, true)
+        );
+
+        final var aCategory2 = categoryGateway.create(
+                Category.newCategory("Series", null, true)
+        );
+
+        final var expectedName = "Drama";
+        final var expectedIsActive = true;
+        final var expectedCategories = List.of(aCategory1.getId(), aCategory2.getId());
+
+        final var aGenre= Genre.newGenre(expectedName, expectedIsActive);
+        aGenre.addCategories(expectedCategories);
+
+        final var expectedId = aGenre.getId();
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        Assertions.assertEquals(1, genreRepository.count());
+
+        final var actualGenre = genreGateway.findById(expectedId).get();
+
+        Assertions.assertEquals(aGenre.getId(), actualGenre.getId());
+        Assertions.assertEquals(expectedName, actualGenre.getName());
+        Assertions.assertEquals(expectedIsActive, actualGenre.isActive());
+        Assertions.assertEquals(sortCategories(expectedCategories), sortCategories(actualGenre.getCategories()));
+        Assertions.assertEquals(aGenre.getCreatedAt(), actualGenre.getCreatedAt());
+        Assertions.assertEquals(aGenre.getUpdatedAt(), actualGenre.getUpdatedAt());
+        Assertions.assertEquals(aGenre.getDeletedAt(), actualGenre.getDeletedAt());
+    }
+
+    @Test
+    public void givenInvalidGenreId_whenCallsFindById_thenReturnEmpty() {
+        final var actualGenre = genreGateway.findById(GenreID.from("invalid"));
+
+        Assertions.assertTrue(actualGenre.isEmpty());
+    }
+
     private List<CategoryID> sortCategories(final List<CategoryID> categories) {
         return categories.stream()
                 .sorted(Comparator.comparing(CategoryID::getValue))
