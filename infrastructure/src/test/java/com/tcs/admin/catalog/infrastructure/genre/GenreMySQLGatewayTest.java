@@ -4,6 +4,7 @@ import com.tcs.admin.catalog.MySQLGatewayTest;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.genre.Genre;
+import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.infrastructure.category.CategoryMySQLGateway;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreRepository;
@@ -307,6 +308,28 @@ public class GenreMySQLGatewayTest {
         Assertions.assertNotNull(actualEntity.getCreatedAt());
         Assertions.assertNotNull(actualEntity.getUpdatedAt());
         Assertions.assertNotNull(actualEntity.getDeletedAt());
+    }
+
+    @Test
+    public void givenPrePersistedGenre_whenCallsDeleteById_thenDeleteGenre() {
+        final var aGenre = Genre.newGenre("Drama", true);
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        Assertions.assertEquals(1, genreRepository.count());
+
+        genreGateway.deleteById(aGenre.getId());
+
+        Assertions.assertEquals(0, genreRepository.count());
+    }
+
+    @Test
+    public void givenInvalidId_whenCallsDeleteById_thenReturnOk() {
+        Assertions.assertEquals(0, genreRepository.count());
+
+        genreGateway.deleteById(GenreID.from("invalid"));
+
+        Assertions.assertEquals(0, genreRepository.count());
     }
 
     private List<CategoryID> sortCategories(final List<CategoryID> categories) {
