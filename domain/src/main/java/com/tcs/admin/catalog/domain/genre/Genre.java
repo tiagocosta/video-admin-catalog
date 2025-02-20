@@ -1,9 +1,7 @@
 package com.tcs.admin.catalog.domain.genre;
 
 import com.tcs.admin.catalog.domain.AggregateRoot;
-import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryID;
-import com.tcs.admin.catalog.domain.category.CategoryValidator;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import com.tcs.admin.catalog.domain.utils.InstantUtils;
 import com.tcs.admin.catalog.domain.validation.ValidationHandler;
@@ -44,7 +42,7 @@ public class Genre extends AggregateRoot<GenreID> {
 
     public static Genre newGenre(final String aName, final boolean isActive) {
         final var anId = GenreID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         final var deletedAt = isActive ? null : now;
         return new Genre(
                 anId,
