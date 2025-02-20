@@ -2,12 +2,14 @@ package com.tcs.admin.catalog.infrastructure.api.controllers;
 
 import com.tcs.admin.catalog.application.genre.create.CreateGenreCommand;
 import com.tcs.admin.catalog.application.genre.create.CreateGenreUseCase;
+import com.tcs.admin.catalog.application.genre.retrieve.get.GetGenreByIdUseCase;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.infrastructure.api.GenreAPI;
 import com.tcs.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
 import com.tcs.admin.catalog.infrastructure.genre.models.GenreListResponse;
 import com.tcs.admin.catalog.infrastructure.genre.models.GenreResponse;
 import com.tcs.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
+import com.tcs.admin.catalog.infrastructure.genre.presenters.GenreApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,11 +20,14 @@ import java.util.Objects;
 public class GenreController implements GenreAPI {
 
     private final CreateGenreUseCase createGenreUseCase;
+    private final GetGenreByIdUseCase getGenreByIdUseCase;
 
     public GenreController(
-            final CreateGenreUseCase createGenreUseCase
+            final CreateGenreUseCase createGenreUseCase,
+            final GetGenreByIdUseCase getGenreByIdUseCase
     ) {
         this.createGenreUseCase = Objects.requireNonNull(createGenreUseCase);
+        this.getGenreByIdUseCase = Objects.requireNonNull(getGenreByIdUseCase);
     }
 
     @Override
@@ -47,7 +52,7 @@ public class GenreController implements GenreAPI {
 
     @Override
     public GenreResponse getById(final String id) {
-        return null;
+        return GenreApiPresenter.present(this.getGenreByIdUseCase.execute(id));
     }
 
     @Override
