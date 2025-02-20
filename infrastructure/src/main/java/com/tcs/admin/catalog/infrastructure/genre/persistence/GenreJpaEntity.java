@@ -10,7 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Entity(name = "genres")
+@Entity(name = "Genre")
+@Table(name = "genres")
 public class GenreJpaEntity {
 
     @Id

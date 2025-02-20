@@ -1,14 +1,12 @@
 package com.tcs.admin.catalog.infrastructure.genre.persistence;
 
 import com.tcs.admin.catalog.domain.category.CategoryID;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 
-@Entity(name = "genres_categories")
+@Entity
+@Table(name = "genres_categories")
 public class GenreCategoryJpaEntity {
 
     @EmbeddedId
