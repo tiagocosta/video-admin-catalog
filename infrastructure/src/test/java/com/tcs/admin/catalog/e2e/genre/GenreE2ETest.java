@@ -2,6 +2,7 @@ package com.tcs.admin.catalog.e2e.genre;
 
 import com.tcs.admin.catalog.E2ETest;
 import com.tcs.admin.catalog.domain.category.CategoryID;
+import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.e2e.MockDsl;
 import com.tcs.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreRepository;
@@ -236,7 +237,7 @@ public class GenreE2ETest implements MockDsl {
                 givenACategory("Movies", null, true)
         );
 
-        final var actualId = givenAGenre(expectedName, expectedIsActive, expectedCategories);
+        final var actualId = givenAGenre("Dram", expectedIsActive, expectedCategories);
 
         final var updateGenreRequest =
                 new UpdateGenreRequest(expectedName, expectedIsActive, mapTo(expectedCategories, CategoryID::getValue));
@@ -328,21 +329,26 @@ public class GenreE2ETest implements MockDsl {
         Assertions.assertNotNull(actualGenre.updatedAt());
         Assertions.assertNull(actualGenre.deletedAt());
     }
-//
-//    @Test
-//    public void as_aCatalogAdmin_shouldBeAbleToDeleteCategoryByItsIdentifier() throws Exception {
-//        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
-//        Assertions.assertEquals(0, this.categoryRepository.count());
-//
-//        final var actualId = givenACategory("Movies", null, true);
-//
-//        final var aRequest = MockMvcRequestBuilders.delete("/categories/{id}", actualId.getValue());
-//
-//        this.mvc.perform(aRequest)
-//                .andExpect(status().isNoContent());
-//
-//        Assertions.assertFalse(categoryRepository.existsById(actualId.getValue()));
-//    }
 
+    @Test
+    public void as_aCatalogAdmin_shouldBeAbleToDeleteGenreByItsIdentifier() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.genreRepository.count());
 
+        final var actualId = givenAGenre("Drama", true, List.of());
+
+        deleteAGenre(actualId)
+                .andExpect(status().isNoContent());
+
+        Assertions.assertFalse(genreRepository.existsById(actualId.getValue()));
+    }
+
+    @Test
+    public void as_aCatalogAdmin_whenTryToDeleteGenreUsingWrongId_thenShouldNotSeeAnError() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.genreRepository.count());
+
+        deleteAGenre(GenreID.from("not-found"))
+                .andExpect(status().isNoContent());
+    }
 }

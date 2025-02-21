@@ -90,6 +90,10 @@ public interface MockDsl {
         return this.retrieve("/genres", anId, GenreResponse.class);
     }
 
+    default ResultActions deleteAGenre(final Identifier anId) throws Exception {
+        return this.delete("/genres", anId);
+    }
+
     default ResultActions updateAGenre(final Identifier anId, final UpdateGenreRequest aRequest) throws Exception {
         return this.update("/genres", anId, aRequest);
     }
