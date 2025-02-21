@@ -9,6 +9,7 @@ import com.tcs.admin.catalog.infrastructure.category.models.UpdateCategoryReques
 import com.tcs.admin.catalog.infrastructure.configuration.json.Json;
 import com.tcs.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
 import com.tcs.admin.catalog.infrastructure.genre.models.GenreResponse;
+import com.tcs.admin.catalog.infrastructure.genre.models.UpdateGenreRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -57,8 +58,8 @@ public interface MockDsl {
         return this.delete("/categories", anId);
     }
 
-    default ResultActions updateACategory(final Identifier anId, final UpdateCategoryRequest aRqeuest) throws Exception {
-        return this.update("/categories", anId, aRqeuest);
+    default ResultActions updateACategory(final Identifier anId, final UpdateCategoryRequest aRequest) throws Exception {
+        return this.update("/categories", anId, aRequest);
     }
 
     default GenreID givenAGenre(final String aName, final boolean isActive, final List<CategoryID> categories) throws Exception {
@@ -87,6 +88,10 @@ public interface MockDsl {
 
     default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
         return this.retrieve("/genres", anId, GenreResponse.class);
+    }
+
+    default ResultActions updateAGenre(final Identifier anId, final UpdateGenreRequest aRequest) throws Exception {
+        return this.update("/genres", anId, aRequest);
     }
 
     default <IN, OUT> List<OUT> mapTo(final List<IN> actual, final Function<IN, OUT> mapper) {
