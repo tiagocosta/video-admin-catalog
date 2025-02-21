@@ -8,6 +8,7 @@ import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryReques
 import com.tcs.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
 import com.tcs.admin.catalog.infrastructure.configuration.json.Json;
 import com.tcs.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
+import com.tcs.admin.catalog.infrastructure.genre.models.GenreResponse;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -82,6 +83,10 @@ public interface MockDsl {
             final String direction
     ) throws Exception {
         return this.list("/genres", page, perPage, search, sort, direction);
+    }
+
+    default GenreResponse retrieveAGenre(final Identifier anId) throws Exception {
+        return this.retrieve("/genres", anId, GenreResponse.class);
     }
 
     default <IN, OUT> List<OUT> mapTo(final List<IN> actual, final Function<IN, OUT> mapper) {

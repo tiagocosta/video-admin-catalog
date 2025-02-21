@@ -3,19 +3,15 @@ package com.tcs.admin.catalog.e2e.genre;
 import com.tcs.admin.catalog.E2ETest;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.e2e.MockDsl;
-import com.tcs.admin.catalog.infrastructure.configuration.json.Json;
-import com.tcs.admin.catalog.infrastructure.genre.models.GenreResponse;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -68,7 +64,7 @@ public class GenreE2ETest implements MockDsl {
 
         final var actualId = givenAGenre(expectedName, expectedIsActive, expectedCategories);
 
-        final var actualGenre = retrieveAGenre(actualId.getValue());
+        final var actualGenre = retrieveAGenre(actualId);
 
         Assertions.assertEquals(expectedName, actualGenre.name());
         Assertions.assertEquals(expectedIsActive, actualGenre.active());
@@ -95,7 +91,7 @@ public class GenreE2ETest implements MockDsl {
 
         final var actualId = givenAGenre(expectedName, expectedIsActive, expectedCategories);
 
-        final var actualGenre = retrieveAGenre(actualId.getValue());
+        final var actualGenre = retrieveAGenre(actualId);
 
         Assertions.assertEquals(expectedName, actualGenre.name());
         Assertions.assertEquals(expectedIsActive, actualGenre.active());
@@ -168,7 +164,7 @@ public class GenreE2ETest implements MockDsl {
     }
 
     @Test
-    public void as_aCatalogAdmin_shouldBeAbleToSortAllGenresByDescriptionDesc() throws Exception {
+    public void as_aCatalogAdmin_shouldBeAbleToSortAllGenresByNameDesc() throws Exception {
         Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
         Assertions.assertEquals(0, this.genreRepository.count());
 
@@ -326,17 +322,5 @@ public class GenreE2ETest implements MockDsl {
 //        Assertions.assertFalse(categoryRepository.existsById(actualId.getValue()));
 //    }
 
-
-    private GenreResponse retrieveAGenre(final String anId) throws Exception {
-        final var aRequest = MockMvcRequestBuilders.get("/genres/{id}", anId)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        final var json = this.mvc.perform(aRequest)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse().getContentAsString();
-
-        return Json.readValue(json, GenreResponse.class);
-    }
 
 }
