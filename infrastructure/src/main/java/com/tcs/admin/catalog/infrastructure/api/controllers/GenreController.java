@@ -4,9 +4,11 @@ import com.tcs.admin.catalog.application.genre.create.CreateGenreCommand;
 import com.tcs.admin.catalog.application.genre.create.CreateGenreUseCase;
 import com.tcs.admin.catalog.application.genre.delete.DeleteGenreUseCase;
 import com.tcs.admin.catalog.application.genre.retrieve.get.GetGenreByIdUseCase;
+import com.tcs.admin.catalog.application.genre.retrieve.list.ListGenresUseCase;
 import com.tcs.admin.catalog.application.genre.update.UpdateGenreCommand;
 import com.tcs.admin.catalog.application.genre.update.UpdateGenreUseCase;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
+import com.tcs.admin.catalog.domain.pagination.SearchQuery;
 import com.tcs.admin.catalog.infrastructure.api.GenreAPI;
 import com.tcs.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
 import com.tcs.admin.catalog.infrastructure.genre.models.GenreListResponse;
@@ -26,17 +28,20 @@ public class GenreController implements GenreAPI {
     private final GetGenreByIdUseCase getGenreByIdUseCase;
     private final UpdateGenreUseCase updateGenreUseCase;
     private final DeleteGenreUseCase deleteGenreUseCase;
+    private final ListGenresUseCase listGenresUseCase;
 
     public GenreController(
             final CreateGenreUseCase createGenreUseCase,
             final GetGenreByIdUseCase getGenreByIdUseCase,
             final UpdateGenreUseCase updateGenreUseCase,
-            final DeleteGenreUseCase deleteGenreUseCase
+            final DeleteGenreUseCase deleteGenreUseCase,
+            final ListGenresUseCase listGenresUseCase
     ) {
         this.createGenreUseCase = Objects.requireNonNull(createGenreUseCase);
         this.getGenreByIdUseCase = Objects.requireNonNull(getGenreByIdUseCase);
         this.updateGenreUseCase = Objects.requireNonNull(updateGenreUseCase);
         this.deleteGenreUseCase = Objects.requireNonNull(deleteGenreUseCase);
+        this.listGenresUseCase = Objects.requireNonNull(listGenresUseCase);
     }
 
     @Override
@@ -56,7 +61,8 @@ public class GenreController implements GenreAPI {
             final String sort,
             final String direction
     ) {
-        return null;
+        return this.listGenresUseCase.execute(new SearchQuery(page, perPage, search, sort, direction))
+                .map(GenreApiPresenter::present);
     }
 
     @Override

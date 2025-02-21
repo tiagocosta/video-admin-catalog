@@ -14,4 +14,8 @@ public record GenreResponse(
         Instant updatedAt,
         Instant deletedAt
 ) {
+
+    public boolean isActive() {
+        return active != null ? active : true;
+    }
 }
