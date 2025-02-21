@@ -2,13 +2,11 @@ package com.tcs.admin.catalog.e2e.genre;
 
 import com.tcs.admin.catalog.E2ETest;
 import com.tcs.admin.catalog.domain.category.CategoryID;
-import com.tcs.admin.catalog.domain.genre.GenreID;
-import com.tcs.admin.catalog.infrastructure.category.models.CategoryResponse;
-import com.tcs.admin.catalog.infrastructure.category.models.CreateCategoryRequest;
+import com.tcs.admin.catalog.e2e.MockDsl;
 import com.tcs.admin.catalog.infrastructure.configuration.json.Json;
-import com.tcs.admin.catalog.infrastructure.genre.models.CreateGenreRequest;
 import com.tcs.admin.catalog.infrastructure.genre.models.GenreResponse;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreRepository;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,20 +15,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
-import java.util.function.Function;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @E2ETest
 @Testcontainers
-public class GenreE2ETest {
+public class GenreE2ETest implements MockDsl {
 
     @Autowired
     private MockMvc mvc;
@@ -53,6 +50,11 @@ public class GenreE2ETest {
     @BeforeEach
     void cleanUp() {
         this.genreRepository.deleteAll();
+    }
+
+    @Override
+    public MockMvc mvc() {
+        return this.mvc;
     }
 
     @Test
@@ -106,84 +108,84 @@ public class GenreE2ETest {
         Assertions.assertNull(actualGenre.deletedAt());
     }
 
-//    @Test
-//    public void as_aCatalogAdmin_shouldBeAbleToNavigateAllCategories() throws Exception {
-//        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
-//        Assertions.assertEquals(0, this.categoryRepository.count());
-//
-//        final var actualId1 = givenACategory("Movies", null, true);
-//        final var actualId2 = givenACategory("Documentaries", null, true);
-//        final var actualId3 = givenACategory("Series", null, true);
-//
-//        listCategories(0, 1)
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
-//                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
-//                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
-//                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
-//                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Documentaries")));
-//
-//        listCategories(1, 1)
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.current_page", Matchers.equalTo(1)))
-//                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
-//                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
-//                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
-//                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Movies")));
-//
-//        listCategories(2, 1)
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.current_page", Matchers.equalTo(2)))
-//                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
-//                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
-//                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
-//                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Series")));
-//
-//        listCategories(3, 1)
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.current_page", Matchers.equalTo(3)))
-//                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
-//                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
-//                .andExpect(jsonPath("$.items", Matchers.hasSize(0)));
-//    }
-//
-//    @Test
-//    public void as_aCatalogAdmin_shouldBeAbleToSearchBetweenAllCategories() throws Exception {
-//        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
-//        Assertions.assertEquals(0, this.categoryRepository.count());
-//
-//        final var actualId1 = givenACategory("Movies", null, true);
-//        final var actualId2 = givenACategory("Documentaries", null, true);
-//        final var actualId3 = givenACategory("Series", null, true);
-//
-//        listCategories(0, 1, "mov")
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
-//                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
-//                .andExpect(jsonPath("$.total", Matchers.equalTo(1)))
-//                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
-//                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Movies")));
-//    }
-//
-//    @Test
-//    public void as_aCatalogAdmin_shouldBeAbleToSortAllCategoriesByDescriptionDesc() throws Exception {
-//        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
-//        Assertions.assertEquals(0, this.categoryRepository.count());
-//
-//        givenACategory("Movies", "Movies", true);
-//        givenACategory("Documentaries", "Docs", true);
-//        givenACategory("Series", "Series", true);
-//
-//        listCategories(0, 3, "", "description", "desc")
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
-//                .andExpect(jsonPath("$.per_page", Matchers.equalTo(3)))
-//                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
-//                .andExpect(jsonPath("$.items", Matchers.hasSize(3)))
-//                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Series")))
-//                .andExpect(jsonPath("$.items[1].name", Matchers.equalTo("Movies")))
-//                .andExpect(jsonPath("$.items[2].name", Matchers.equalTo("Documentaries")));
-//    }
+    @Test
+    public void as_aCatalogAdmin_shouldBeAbleToNavigateAllGenres() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.genreRepository.count());
+
+        givenAGenre("Drama", true, List.of());
+        givenAGenre("Action", true, List.of());
+        givenAGenre("Scientific Fiction", true, List.of());
+
+        listGenres(0, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Action")));
+
+        listGenres(1, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Drama")));
+
+        listGenres(2, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(2)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Scientific Fiction")));
+
+        listGenres(3, 1)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(0)));
+    }
+
+    @Test
+    public void as_aCatalogAdmin_shouldBeAbleToSearchBetweenAllGenres() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.genreRepository.count());
+
+        givenAGenre("Drama", true, List.of());
+        givenAGenre("Action", true, List.of());
+        givenAGenre("Scientific Fiction", true, List.of());
+
+        listGenres(0, 1, "fic")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(1)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Scientific Fiction")));
+    }
+
+    @Test
+    public void as_aCatalogAdmin_shouldBeAbleToSortAllGenresByDescriptionDesc() throws Exception {
+        Assertions.assertTrue(MYSQL_CONTAINER.isRunning());
+        Assertions.assertEquals(0, this.genreRepository.count());
+
+        givenAGenre("Drama", true, List.of());
+        givenAGenre("Action", true, List.of());
+        givenAGenre("Scientific Fiction", true, List.of());
+
+        listGenres(0, 3, "", "name", "desc")
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.current_page", Matchers.equalTo(0)))
+                .andExpect(jsonPath("$.per_page", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.total", Matchers.equalTo(3)))
+                .andExpect(jsonPath("$.items", Matchers.hasSize(3)))
+                .andExpect(jsonPath("$.items[0].name", Matchers.equalTo("Scientific Fiction")))
+                .andExpect(jsonPath("$.items[1].name", Matchers.equalTo("Drama")))
+                .andExpect(jsonPath("$.items[2].name", Matchers.equalTo("Action")));
+    }
 //
 //    @Test
 //    public void as_aCatalogAdmin_shouldBeAbleToGetCategoryByItsIdentifier() throws Exception {
@@ -324,47 +326,6 @@ public class GenreE2ETest {
 //        Assertions.assertFalse(categoryRepository.existsById(actualId.getValue()));
 //    }
 
-    private ResultActions listGenres(final int page, final int perPage) throws Exception {
-        return listGenres(page, perPage, "", "", "");
-    }
-
-    private ResultActions listGenres(final int page, final int perPage, final String search) throws Exception {
-        return listGenres(page, perPage, search, "", "");
-    }
-
-    private ResultActions listGenres(
-            final int page,
-            final int perPage,
-            final String search,
-            final String sort,
-            final String direction
-    ) throws Exception {
-        final var aRequest = MockMvcRequestBuilders.get("/genres")
-                .queryParam("page", String.valueOf(page))
-                .queryParam("perPage", String.valueOf(perPage))
-                .queryParam("search", search)
-                .queryParam("sort", sort)
-                .queryParam("dir", direction)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        return this.mvc.perform(aRequest);
-    }
-
-    private GenreID givenAGenre(final String aName, final boolean isActive, final List<CategoryID> categories) throws Exception {
-        final var createGenreRequest = new CreateGenreRequest(aName, isActive, mapTo(categories, CategoryID::getValue));
-
-        final var aRequest = MockMvcRequestBuilders.post("/genres")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(createGenreRequest));
-
-        final var actualId = this.mvc.perform(aRequest)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse().getHeader("Location")
-                .replace("/genres/", "");
-
-        return GenreID.from(actualId);
-    }
 
     private GenreResponse retrieveAGenre(final String anId) throws Exception {
         final var aRequest = MockMvcRequestBuilders.get("/genres/{id}", anId)
@@ -378,37 +339,4 @@ public class GenreE2ETest {
         return Json.readValue(json, GenreResponse.class);
     }
 
-    private CategoryID givenACategory(final String aName, final String aDescription, final boolean isActive) throws Exception {
-        final var createCategoryRequest = new CreateCategoryRequest(aName, aDescription, isActive);
-
-        final var aRequest = MockMvcRequestBuilders.post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.writeValueAsString(createCategoryRequest));
-
-        final var actualId = this.mvc.perform(aRequest)
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse().getHeader("Location")
-                .replace("/categories/", "");
-
-        return CategoryID.from(actualId);
-    }
-
-    private CategoryResponse retrieveACategory(final String anId) throws Exception {
-        final var aRequest = MockMvcRequestBuilders.get("/categories/{id}", anId)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        final var json = this.mvc.perform(aRequest)
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse().getContentAsString();
-
-        return Json.readValue(json, CategoryResponse.class);
-    }
-
-    private <O, D> List<D> mapTo(final List<O> actual, final Function<O, D> mapper) {
-        return actual.stream()
-                .map(mapper)
-                .toList();
-    }
 }
