@@ -5,6 +5,7 @@ import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
+import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreJpaEntity;
 import com.tcs.admin.catalog.infrastructure.genre.persistence.GenreRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,13 @@ public class DeleteGenreUseCaseIT {
 
         final var expectedId = aGenre.getId();
 
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        Assertions.assertEquals(1, genreRepository.count());
+
         Assertions.assertDoesNotThrow(() -> useCase.execute(expectedId.getValue()));
+
+        Assertions.assertEquals(0, genreRepository.count());
 
         Mockito.verify(genreGateway, times(1)).deleteById(expectedId);
     }
