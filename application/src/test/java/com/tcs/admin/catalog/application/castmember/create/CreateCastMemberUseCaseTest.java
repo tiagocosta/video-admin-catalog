@@ -1,6 +1,6 @@
 package com.tcs.admin.catalog.application.castmember.create;
 
-import com.tcs.admin.catalog.application.Fixture;
+import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.castmember.CastMemberGateway;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;

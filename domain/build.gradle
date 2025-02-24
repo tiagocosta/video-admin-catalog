@@ -10,10 +10,27 @@ repositories {
 }
 
 dependencies {
+    testImplementation('com.github.javafaker:javafaker:1.0.2')
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
+configurations {
+    testClasses {
+        extendsFrom(testImplementation)
+    }
+}
+
 test {
     useJUnitPlatform()
+}
+
+task testJar(type: Jar) {
+    archiveClassifier.set('test')
+    from sourceSets.test.output
+}
+
+artifacts {
+    testClasses testJar
 }

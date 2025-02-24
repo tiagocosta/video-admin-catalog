@@ -1,4 +1,4 @@
-package com.tcs.admin.catalog.application;
+package com.tcs.admin.catalog.domain;
 
 import com.github.javafaker.Faker;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
