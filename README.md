@@ -15,6 +15,10 @@ RabbitMQ
 
 MySQL
 
+Flyway
+
+Testcontainers
+
 Google Cloud Storage
 
 Kafka Connect
