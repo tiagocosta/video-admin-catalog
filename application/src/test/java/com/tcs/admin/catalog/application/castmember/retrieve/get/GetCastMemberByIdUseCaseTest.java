@@ -1,6 +1,6 @@
 package com.tcs.admin.catalog.application.castmember.retrieve.get;
 
-import com.tcs.admin.catalog.application.Fixture;
+import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberGateway;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
