@@ -2,12 +2,14 @@ package com.tcs.admin.catalog.infrastructure.api.controllers;
 
 import com.tcs.admin.catalog.application.castmember.create.CreateCastMemberCommand;
 import com.tcs.admin.catalog.application.castmember.create.CreateCastMemberUseCase;
+import com.tcs.admin.catalog.application.castmember.retrieve.get.GetCastMemberByIdUseCase;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.infrastructure.api.CastMemberAPI;
 import com.tcs.admin.catalog.infrastructure.castmember.models.CastMemberListResponse;
 import com.tcs.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
 import com.tcs.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
 import com.tcs.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
+import com.tcs.admin.catalog.infrastructure.castmember.presenters.CastMemberApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +21,14 @@ public class CastMemberController implements CastMemberAPI {
 
     private final CreateCastMemberUseCase createCastMemberUseCase;
 
-    public CastMemberController(final CreateCastMemberUseCase createCastMemberUseCase) {
+    private final GetCastMemberByIdUseCase getCastMemberByIdUseCase;
+
+    public CastMemberController(
+            final CreateCastMemberUseCase createCastMemberUseCase,
+            final GetCastMemberByIdUseCase getCastMemberByIdUseCase
+    ) {
         this.createCastMemberUseCase = Objects.requireNonNull(createCastMemberUseCase);
+        this.getCastMemberByIdUseCase = Objects.requireNonNull(getCastMemberByIdUseCase);
     }
 
     @Override
@@ -39,7 +47,7 @@ public class CastMemberController implements CastMemberAPI {
 
     @Override
     public CastMemberResponse getById(String id) {
-        return null;
+        return CastMemberApiPresenter.present(this.getCastMemberByIdUseCase.execute(id));
     }
 
     @Override

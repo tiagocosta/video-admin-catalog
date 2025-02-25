@@ -5,11 +5,14 @@ import com.tcs.admin.catalog.ControllerTest;
 import com.tcs.admin.catalog.application.castmember.create.CreateCastMemberOutput;
 import com.tcs.admin.catalog.application.castmember.create.DefaultCreateCastMemberUseCase;
 import com.tcs.admin.catalog.application.castmember.delete.DefaultDeleteCastMemberUseCase;
+import com.tcs.admin.catalog.application.castmember.retrieve.get.CastMemberOutput;
 import com.tcs.admin.catalog.application.castmember.retrieve.get.DefaultGetCastMemberByIdUseCase;
 import com.tcs.admin.catalog.application.castmember.retrieve.list.DefaultListCastMembersUseCase;
 import com.tcs.admin.catalog.application.castmember.update.DefaultUpdateCastMemberUseCase;
+import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
+import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
@@ -108,5 +111,52 @@ public class CastMemberAPITest {
                 Objects.equals(expectedName, cmd.name())
                         && Objects.equals(expectedType, cmd.type())
         ));
+    }
+
+    @Test
+    public void givenValidId_whenCallsGetCastMember_thenReturnIt() throws Exception {
+        final var expectedName = "Vin Diesel";
+        final var expectedType = CastMemberType.ACTOR;
+
+        final var aCastMember = CastMember.newMember(expectedName, expectedType);
+        final var expectedId = aCastMember.getId().getValue();
+
+        when(getCastMemberByIdUseCase.execute(any()))
+                .thenReturn(CastMemberOutput.from(aCastMember));
+
+        final var request = MockMvcRequestBuilders.get("/cast_members/{id}", expectedId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId)))
+                .andExpect(jsonPath("$.name", Matchers.equalTo(expectedName)))
+                .andExpect(jsonPath("$.type", Matchers.equalTo(expectedType.name())))
+                .andExpect(jsonPath("$.created_at", Matchers.equalTo(aCastMember.getCreatedAt().toString())))
+                .andExpect(jsonPath("$.updated_at", Matchers.equalTo(aCastMember.getUpdatedAt().toString())));
+
+        verify(getCastMemberByIdUseCase, times(1)).execute(expectedId);
+    }
+
+    @Test
+    public void givenInvalidId_whenCallsGetCastMember_thenReturnNotFound() throws Exception {
+        final var expectedErrorMessage = "CastMember with ID 123 was not found";
+        final var expectedId = CastMemberID.from("123");
+
+        when(getCastMemberByIdUseCase.execute(any()))
+                .thenThrow(NotFoundException.with(CastMember.class, expectedId));
+
+        final var request = MockMvcRequestBuilders.get("/cast_members/{id}", expectedId.getValue())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message", Matchers.equalTo(expectedErrorMessage)));
+
+        verify(getCastMemberByIdUseCase, times(1)).execute(expectedId.getValue());
     }
 }
