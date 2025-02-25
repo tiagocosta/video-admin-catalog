@@ -9,7 +9,7 @@ import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class DefaultGetCastMemberByIdUseCase extends GetCastMemberByIdUseCase {
+public non-sealed class DefaultGetCastMemberByIdUseCase extends GetCastMemberByIdUseCase {
 
     private final CastMemberGateway castMemberGateway;
 
