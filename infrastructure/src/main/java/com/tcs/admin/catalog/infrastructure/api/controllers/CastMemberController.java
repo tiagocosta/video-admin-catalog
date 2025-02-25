@@ -4,9 +4,11 @@ import com.tcs.admin.catalog.application.castmember.create.CreateCastMemberComma
 import com.tcs.admin.catalog.application.castmember.create.CreateCastMemberUseCase;
 import com.tcs.admin.catalog.application.castmember.delete.DeleteCastMemberUseCase;
 import com.tcs.admin.catalog.application.castmember.retrieve.get.GetCastMemberByIdUseCase;
+import com.tcs.admin.catalog.application.castmember.retrieve.list.ListCastMembersUseCase;
 import com.tcs.admin.catalog.application.castmember.update.UpdateCastMemberCommand;
 import com.tcs.admin.catalog.application.castmember.update.UpdateCastMemberUseCase;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
+import com.tcs.admin.catalog.domain.pagination.SearchQuery;
 import com.tcs.admin.catalog.infrastructure.api.CastMemberAPI;
 import com.tcs.admin.catalog.infrastructure.castmember.models.CastMemberListResponse;
 import com.tcs.admin.catalog.infrastructure.castmember.models.CastMemberResponse;
@@ -30,16 +32,20 @@ public class CastMemberController implements CastMemberAPI {
 
     private final DeleteCastMemberUseCase deleteCastMemberUseCase;
 
+    private final ListCastMembersUseCase listCastMembersUseCase;
+
     public CastMemberController(
             final CreateCastMemberUseCase createCastMemberUseCase,
             final GetCastMemberByIdUseCase getCastMemberByIdUseCase,
             final UpdateCastMemberUseCase updateCastMemberUseCase,
-            final DeleteCastMemberUseCase deleteCastMemberUseCase
+            final DeleteCastMemberUseCase deleteCastMemberUseCase,
+            final ListCastMembersUseCase listCastMembersUseCase
     ) {
         this.createCastMemberUseCase = Objects.requireNonNull(createCastMemberUseCase);
         this.getCastMemberByIdUseCase = Objects.requireNonNull(getCastMemberByIdUseCase);
         this.updateCastMemberUseCase = Objects.requireNonNull(updateCastMemberUseCase);
         this.deleteCastMemberUseCase = Objects.requireNonNull(deleteCastMemberUseCase);
+        this.listCastMembersUseCase = Objects.requireNonNull(listCastMembersUseCase);
     }
 
     @Override
@@ -52,8 +58,15 @@ public class CastMemberController implements CastMemberAPI {
     }
 
     @Override
-    public Pagination<CastMemberListResponse> list(String search, int page, int perPage, String sort, String direction) {
-        return null;
+    public Pagination<CastMemberListResponse> list(
+            final String search,
+            final int page,
+            final int perPage,
+            final String sort,
+            final String direction
+    ) {
+        return this.listCastMembersUseCase.execute(new SearchQuery(page, perPage, search, sort, direction))
+                .map(CastMemberApiPresenter::present);
     }
 
     @Override
