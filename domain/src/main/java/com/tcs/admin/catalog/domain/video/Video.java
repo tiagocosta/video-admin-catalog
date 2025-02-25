@@ -211,88 +211,71 @@ public class Video extends AggregateRoot<VideoID> {
         return castMembers != null ? Collections.unmodifiableSet(castMembers) : Collections.emptySet();
     }
 
-    public Video setTitle(final String title) {
-        this.title = title;
-        return this;
-    }
-
-    public Video setDescription(final String description) {
-        this.description = description;
-        return this;
-    }
-
-    public Video setLaunchedAt(final Year launchedAt) {
-        this.launchedAt = launchedAt;
-        return this;
-    }
-
-    public Video setDuration(final double duration) {
-        this.duration = duration;
-        return this;
-    }
-
-    public Video setRating(final Rating rating) {
-        this.rating = rating;
-        return this;
-    }
-
-    public Video setOpened(final boolean opened) {
-        this.opened = opened;
-        return this;
-    }
-
-    public Video setPublished(final boolean published) {
-        this.published = published;
-        return this;
-    }
-
-    public Video setCreatedAt(final Instant createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public Video setUpdatedAt(final Instant updatedAt) {
-        this.updatedAt = updatedAt;
+    public Video update(
+            final String aTitle,
+            final String aDescription,
+            final Year aLaunchYear,
+            final double aDuration,
+            final Rating aRating,
+            final boolean wasOpened,
+            final boolean wasPublished,
+            final Set<CategoryID> categories,
+            final Set<GenreID> genres,
+            final Set<CastMemberID> castMembers
+    ) {
+        this.title = aTitle;
+        this.description = aDescription;
+        this.launchedAt = aLaunchYear;
+        this.duration = aDuration;
+        this.rating = aRating;
+        this.opened = wasOpened;
+        this.published = wasPublished;
+        this.setCategories(categories);
+        this.setGenres(genres);
+        this.setCastMembers(castMembers);
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
     public Video setBanner(final ImageMedia banner) {
         this.banner = banner;
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
     public Video setThumbnail(final ImageMedia thumbnail) {
         this.thumbnail = thumbnail;
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
     public Video setThumbnailHalf(final ImageMedia thumbnailHalf) {
         this.thumbnailHalf = thumbnailHalf;
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
     public Video setTrailer(final AudioVideoMedia trailer) {
         this.trailer = trailer;
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
     public Video setVideo(final AudioVideoMedia video) {
         this.video = video;
+        this.updatedAt = InstantUtils.now();
         return this;
     }
 
-    public Video setCategories(final Set<CategoryID> categories) {
+    private void setCategories(final Set<CategoryID> categories) {
         this.categories = categories != null ? new HashSet<>(categories) : Collections.emptySet();
-        return this;
     }
 
-    public Video setGenres(final Set<GenreID> genres) {
+    private void setGenres(final Set<GenreID> genres) {
         this.genres = genres != null ? new HashSet<>(genres) : Collections.emptySet();
-        return this;
     }
 
-    public Video setCastMembers(final Set<CastMemberID> castMembers) {
+    private void setCastMembers(final Set<CastMemberID> castMembers) {
         this.castMembers = castMembers != null ? new HashSet<>(castMembers) : Collections.emptySet();
-        return this;
     }
 }
