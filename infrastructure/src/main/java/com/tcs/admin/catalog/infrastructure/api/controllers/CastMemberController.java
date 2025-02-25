@@ -70,7 +70,7 @@ public class CastMemberController implements CastMemberAPI {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(final String id) {
         this.deleteCastMemberUseCase.execute(id);
     }
 }

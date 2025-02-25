@@ -79,7 +79,6 @@ public interface CategoryAPI {
     @Operation(summary = "Delete a category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Category was not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error"),
     })
     void deleteById(@PathVariable  String id);

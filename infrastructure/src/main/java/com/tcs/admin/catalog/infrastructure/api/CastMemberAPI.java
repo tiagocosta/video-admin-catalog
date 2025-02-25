@@ -79,7 +79,6 @@ public interface CastMemberAPI {
     @Operation(summary = "Delete a cast member")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Cast member was not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error"),
     })
     void deleteById(@PathVariable  String id);
