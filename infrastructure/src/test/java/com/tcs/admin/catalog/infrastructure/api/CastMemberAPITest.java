@@ -9,6 +9,7 @@ import com.tcs.admin.catalog.application.castmember.retrieve.get.CastMemberOutpu
 import com.tcs.admin.catalog.application.castmember.retrieve.get.DefaultGetCastMemberByIdUseCase;
 import com.tcs.admin.catalog.application.castmember.retrieve.list.DefaultListCastMembersUseCase;
 import com.tcs.admin.catalog.application.castmember.update.DefaultUpdateCastMemberUseCase;
+import com.tcs.admin.catalog.application.castmember.update.UpdateCastMemberOutput;
 import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
@@ -16,6 +17,7 @@ import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.infrastructure.castmember.models.CreateCastMemberRequest;
+import com.tcs.admin.catalog.infrastructure.castmember.models.UpdateCastMemberRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,5 +160,108 @@ public class CastMemberAPITest {
                 .andExpect(jsonPath("$.message", Matchers.equalTo(expectedErrorMessage)));
 
         verify(getCastMemberByIdUseCase, times(1)).execute(expectedId.getValue());
+    }
+
+    @Test
+    public void givenValidCommand_whenCallsUpdateCastMember_thenReturnId() throws Exception {
+        final var expectedName = "Vin Diesel";
+        final var expectedType = CastMemberType.ACTOR;
+        final var aCastMember = CastMember.newMember(expectedName, expectedType);
+        final var expectedId = aCastMember.getId();
+
+        final var anInput = new UpdateCastMemberRequest(expectedName, expectedType);
+
+        when(updateCastMemberUseCase.execute(any()))
+                .thenReturn(UpdateCastMemberOutput.from(expectedId.getValue()));
+
+        final var request = MockMvcRequestBuilders.put("/cast_members/{id}", expectedId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(anInput));
+
+        this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", Matchers.equalTo(expectedId.getValue())));
+
+        verify(updateCastMemberUseCase, times(1)).execute(argThat(cmd ->
+                Objects.equals(expectedId.getValue(), cmd.id())
+                        && Objects.equals(expectedName, cmd.name())
+                        && Objects.equals(expectedType, cmd.type())
+        ));
+    }
+
+    @Test
+    public void givenInvalidCommand_whenCallsUpdateCastMember_thenReturnNotificationException() throws Exception {
+        final var aCastMember = CastMember.newMember("Vin Diesel", CastMemberType.DIRECTOR);
+        final var expectedId = aCastMember.getId();
+
+        final String expectedName = null;
+        final var expectedType = CastMemberType.ACTOR;
+        final var expectedErrorMessage = "'name' should not be null";
+
+        final var anInput = new UpdateCastMemberRequest(expectedName, expectedType);
+
+        when(updateCastMemberUseCase.execute(any()))
+                .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
+
+        final var request = MockMvcRequestBuilders.put("/cast_members/{id}", expectedId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(anInput));
+
+        this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Location", Matchers.nullValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.errors", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message", Matchers.equalTo(expectedErrorMessage)));
+
+        verify(updateCastMemberUseCase, times(1)).execute(argThat(cmd ->
+                Objects.equals(expectedId.getValue(), cmd.id())
+                        && Objects.equals(expectedName, cmd.name())
+                        && Objects.equals(expectedType, cmd.type())
+        ));
+    }
+
+    @Test
+    public void givenInvalidId_whenCallsUpdateCastMember_thenReturnNotFound() throws Exception {
+        final var expectedErrorMessage = "CastMember with ID 123 was not found";
+        final var expectedId = CastMemberID.from("123");
+
+        final var anInput = new UpdateCastMemberRequest("Vind", CastMemberType.ACTOR);
+
+        when(updateCastMemberUseCase.execute(any()))
+                .thenThrow(NotFoundException.with(CastMember.class, expectedId));
+
+        final var request = MockMvcRequestBuilders.put("/cast_members/{id}", expectedId.getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(anInput));
+
+        this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message", Matchers.equalTo(expectedErrorMessage)));
+
+        verify(updateCastMemberUseCase, times(1)).execute(any());
+    }
+
+    @Test
+    public void givenValidId_whenCallsDeleteCastMember_thenDeleteIt() throws Exception {
+        final var aCastMember = CastMember.newMember("Vin Diesel", CastMemberType.DIRECTOR);
+        final var expectedId = aCastMember.getId();
+
+        doNothing()
+                .when(deleteCastMemberUseCase).execute(any());
+
+        final var request = MockMvcRequestBuilders.delete("/cast_members/{id}", expectedId.getValue())
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(deleteCastMemberUseCase, times(1)).execute(expectedId.getValue());
     }
 }
