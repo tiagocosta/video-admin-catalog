@@ -1,4 +1,4 @@
-package com.tcs.admin.catalog.application.video.create;
+package com.tcs.admin.catalog.application.video.update;
 
 import com.tcs.admin.catalog.domain.Identifier;
 import com.tcs.admin.catalog.domain.castmember.CastMemberGateway;
@@ -6,6 +6,7 @@ import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.InternalErrorException;
+import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
@@ -13,10 +14,7 @@ import com.tcs.admin.catalog.domain.utils.CollectionUtils;
 import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.domain.validation.ValidationHandler;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
-import com.tcs.admin.catalog.domain.video.MediaResourceGateway;
-import com.tcs.admin.catalog.domain.video.Rating;
-import com.tcs.admin.catalog.domain.video.Video;
-import com.tcs.admin.catalog.domain.video.VideoGateway;
+import com.tcs.admin.catalog.domain.video.*;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -24,9 +22,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
+public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
     private final VideoGateway videoGateway;
     private final MediaResourceGateway mediaResourceGateway;
@@ -34,7 +33,7 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
     private final GenreGateway genreGateway;
     private final CastMemberGateway castMemberGateway;
 
-    public DefaultCreateVideoUseCase(
+    public DefaultUpdateVideoUseCase(
             final VideoGateway videoGateway,
             final MediaResourceGateway mediaResourceGateway,
             final CategoryGateway categoryGateway,
@@ -48,20 +47,25 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
         this.castMemberGateway = Objects.requireNonNull(castMemberGateway);
     }
 
+
     @Override
-    public CreateVideoOutput execute(final CreateVideoCommand aCommand) {
+    public UpdateVideoOutput execute(final UpdateVideoCommand aCommand) {
+        final var anId = VideoID.from(aCommand.id());
         final var aRating = Rating.of(aCommand.rating()).orElse(null);
         final var aLaunchYear = aCommand.launchedAt() != null ? Year.of(aCommand.launchedAt()): null;
         final var categories = CollectionUtils.mapTo(aCommand.categories(), CategoryID::from);
         final var genres = CollectionUtils.mapTo(aCommand.genres(), GenreID::from);
         final var castMembers = CollectionUtils.mapTo(aCommand.castMembers(), CastMemberID::from);
 
+        final var aVideo = videoGateway.findById(anId)
+                .orElseThrow(notFound(anId));
+
         final var notification = Notification.create();
         notification.append(validateCategories(categories));
         notification.append(validateGenres(genres));
         notification.append(validateCastMembers(castMembers));
 
-        final var aVideo = Video.newVideo(
+        aVideo.update(
                 aCommand.title(),
                 aCommand.description(),
                 aLaunchYear,
@@ -73,17 +77,16 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
                 genres,
                 castMembers
         );
-
         aVideo.validate(notification);
 
         if (notification.hasErrors()) {
-            throw new NotificationException("Could not create video aggregate", notification);
+            throw new NotificationException("Could not udate video aggregate", notification);
         }
 
-        return CreateVideoOutput.from(create(aCommand, aVideo));
+        return UpdateVideoOutput.from(update(aCommand, aVideo));
     }
 
-    private Video create(CreateVideoCommand aCommand, Video aVideo) {
+    private Video update(UpdateVideoCommand aCommand, Video aVideo) {
         final var anId = aVideo.getId();
 
         try {
@@ -107,7 +110,7 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
                     .map(it -> mediaResourceGateway.storeImage(anId, it))
                     .orElse(null);
 
-            return videoGateway.create(
+            return videoGateway.update(
                     aVideo
                             .setVideo(aVideoMedia)
                             .setTrailer(aTrailerMedia)
@@ -116,9 +119,8 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
                             .setThumbnailHalf(aThumbHalfMedia)
             );
         } catch (final Throwable t) {
-            mediaResourceGateway.clearResources(anId);
             throw InternalErrorException.with(
-                    "An error occurred when creating video [videoId:%s]".formatted(anId.getValue()),
+                    "An error occurred when updating video [videoId:%s]".formatted(anId.getValue()),
                     t
             );
         }
@@ -164,9 +166,7 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
         return notification;
     }
 
-//    private <T> Set<T> toIdentifier(final Set<String> ids, final Function<String, T> mapper) {
-//        return ids.stream()
-//                .map(mapper)
-//                .collect(Collectors.toSet());
-//    }
+    private static Supplier<NotFoundException> notFound(Identifier anId) {
+        return () -> NotFoundException.with(Video.class, anId);
+    }
 }

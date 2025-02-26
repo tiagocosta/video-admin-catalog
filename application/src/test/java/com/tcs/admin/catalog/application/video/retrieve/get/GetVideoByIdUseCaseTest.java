@@ -8,7 +8,6 @@ import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.domain.video.*;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,8 +31,8 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultGetVideoByIdUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(videoGateway);
     }
 

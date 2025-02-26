@@ -11,7 +11,6 @@ import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.domain.video.*;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,8 +49,8 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
     @InjectMocks
     private DefaultCreateVideoUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(
                 videoGateway,
                 mediaResourceGateway,

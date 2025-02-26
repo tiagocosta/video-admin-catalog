@@ -1,6 +1,7 @@
 package com.tcs.admin.catalog.application;
 
 import com.tcs.admin.catalog.domain.Identifier;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
 import java.util.Set;
@@ -19,4 +20,7 @@ public abstract class UseCaseTest {
                 .map(T::getValue)
                 .collect(Collectors.toSet());
     }
+
+    @BeforeEach
+    abstract protected void cleanUp();
 }

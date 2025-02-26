@@ -7,8 +7,10 @@ import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.video.Rating;
 import com.tcs.admin.catalog.domain.video.Resource;
+import com.tcs.admin.catalog.domain.video.Video;
 
 import java.time.Year;
+import java.util.Set;
 
 public final class Fixture {
 
@@ -88,6 +90,24 @@ public final class Fixture {
 
     public static final class Videos {
 
+        private static final Video FATS_AND_FURIOUS =
+                Video.newVideo(
+                        Fixture.title(),
+                        Fixture.Videos.description(),
+                        Fixture.year(),
+                        Fixture.duration(),
+                        Fixture.Videos.rating(),
+                        Fixture.bool(),
+                        Fixture.bool(),
+                        Set.of(Fixture.Categories.prime().getId()),
+                        Set.of(Fixture.Genres.drama().getId()),
+                        Set.of(Fixture.CastMembers.tiago().getId())
+                );
+
+        public static Video fastAndFurious() {
+            return Video.with(FATS_AND_FURIOUS);
+        }
+
         public static String description() {
             return FAKER.options().option(
                     "Video Description 1",
@@ -97,10 +117,6 @@ public final class Fixture {
         }
 
         public static Rating rating() {
-//            final var values = Arrays.stream(Rating.values())
-//                    .map(Rating::getName)
-//                    .toList()
-//                    .toArray(new String[0]);
             return FAKER.options().option(Rating.values());
         }
 
