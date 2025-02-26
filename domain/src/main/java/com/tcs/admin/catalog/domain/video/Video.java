@@ -19,11 +19,11 @@ public class Video extends AggregateRoot<VideoID> {
     private String title;
     private String description;
     private Year launchedAt;
-    private double duration;
+    private Double duration;
     private Rating rating;
 
-    private boolean opened;
-    private boolean published;
+    private Boolean opened;
+    private Boolean published;
 
     private Instant createdAt;
     private Instant updatedAt;
@@ -44,10 +44,10 @@ public class Video extends AggregateRoot<VideoID> {
             final String aTitle,
             final String aDescription,
             final Year aLaunchYear,
-            final double aDuration,
+            final Double aDuration,
             final Rating aRating,
-            final boolean wasOpened,
-            final boolean wasPublished,
+            final Boolean wasOpened,
+            final Boolean wasPublished,
             final Instant aCreationDate,
             final Instant anUpdateDate,
             final ImageMedia aBanner,
@@ -88,10 +88,10 @@ public class Video extends AggregateRoot<VideoID> {
             final String aTitle,
             final String aDescription,
             final Year aLaunchYear,
-            final double aDuration,
+            final Double aDuration,
             final Rating aRating,
-            final boolean wasOpened,
-            final boolean wasPublished,
+            final Boolean wasOpened,
+            final Boolean wasPublished,
             final Set<CategoryID> categories,
             final Set<GenreID> genres,
             final Set<CastMemberID> castMembers
@@ -215,10 +215,10 @@ public class Video extends AggregateRoot<VideoID> {
             final String aTitle,
             final String aDescription,
             final Year aLaunchYear,
-            final double aDuration,
+            final Double aDuration,
             final Rating aRating,
-            final boolean wasOpened,
-            final boolean wasPublished,
+            final Boolean wasOpened,
+            final Boolean wasPublished,
             final Set<CategoryID> categories,
             final Set<GenreID> genres,
             final Set<CastMemberID> castMembers
