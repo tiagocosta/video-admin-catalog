@@ -35,8 +35,8 @@ public class ListCastMembersUseCaseTest {
     @Test
     public void givenValidQuery_whenCallsListCastMembers_thenReturnAll() {
         final var castMembers = List.of(
-                CastMember.newMember(Fixture.name(), Fixture.CastMember.type()),
-                CastMember.newMember(Fixture.name(), Fixture.CastMember.type())
+                CastMember.newMember(Fixture.name(), Fixture.CastMembers.type()),
+                CastMember.newMember(Fixture.name(), Fixture.CastMembers.type())
         );
         final var expectedPage = 0;
         final var expectedPerPage = 10;

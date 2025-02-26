@@ -35,7 +35,7 @@ public class GetCastMemberByIdUseCaseTest {
     @Test
     public void givenValidId_whenCallsGetCastMember_thenReturnCastMember() {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aCastMember = CastMember.newMember(expectedName, expectedType);
         final var expectedId = aCastMember.getId();

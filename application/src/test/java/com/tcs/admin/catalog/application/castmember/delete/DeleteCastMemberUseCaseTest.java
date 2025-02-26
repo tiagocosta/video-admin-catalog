@@ -37,7 +37,7 @@ public class DeleteCastMemberUseCaseTest {
         final var expectedId = aCastMember.getId();
 
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         doNothing()
                 .when(castMemberGateway).deleteById(any());
@@ -65,7 +65,7 @@ public class DeleteCastMemberUseCaseTest {
         final var expectedId = aCastMember.getId();
 
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         doThrow(new IllegalStateException("gateway error"))
                 .when(castMemberGateway).deleteById(any());

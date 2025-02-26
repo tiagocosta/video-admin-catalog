@@ -43,7 +43,7 @@ public class UpdateCastMemberUseCaseTest {
         final var aCastMember = CastMember.newMember("Vin Diesl", CastMemberType.DIRECTOR);
         final var expectedId = aCastMember.getId();
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aCommand =
                 UpdateCastMemberCommand.with(expectedId.getValue(), expectedName, expectedType);
@@ -74,7 +74,7 @@ public class UpdateCastMemberUseCaseTest {
         final var aCastMember = CastMember.newMember("Vin Diesl", CastMemberType.DIRECTOR);
         final var expectedId = aCastMember.getId();
         final String expectedName = null;
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' should not be null";

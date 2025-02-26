@@ -37,7 +37,7 @@ public class CreateCastMemberUseCaseTest {
     @Test
     public void givenValidCommand_whenCallsCreateCastMember_thenReturnCastMemberId() {
         final var expectedName = Fixture.name();
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var aCommand =
                 CreateCastMemberCommand.with(expectedName, expectedType);
@@ -62,7 +62,7 @@ public class CreateCastMemberUseCaseTest {
     @Test
     public void givenInvalidNullName_whenCallsCreateCastMember_thenThrowsNotificationException() {
         final String expectedName = null;
-        final var expectedType = Fixture.CastMember.type();
+        final var expectedType = Fixture.CastMembers.type();
 
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'name' should not be null";
