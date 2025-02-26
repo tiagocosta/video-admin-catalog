@@ -2,6 +2,7 @@ package com.tcs.admin.catalog.application.video.create;
 
 import com.tcs.admin.catalog.domain.video.Resource;
 
+import java.util.Optional;
 import java.util.Set;
 
 public record CreateVideoCommand(
@@ -38,22 +39,42 @@ public record CreateVideoCommand(
             final Resource thumbnail,
             final Resource thumbnailHalf
     ) {
-    return new CreateVideoCommand(
-            title,
-            description,
-            launchedAt,
-            duration,
-            opened,
-            published,
-            rating,
-            categories,
-            genres,
-            castMembers,
-            video,
-            trailer,
-            banner,
-            thumbnail,
-            thumbnailHalf
-    );
+        return new CreateVideoCommand(
+                title,
+                description,
+                launchedAt,
+                duration,
+                opened,
+                published,
+                rating,
+                categories,
+                genres,
+                castMembers,
+                video,
+                trailer,
+                banner,
+                thumbnail,
+                thumbnailHalf
+        );
+    }
+
+    public Optional<Resource> getVideo() {
+        return Optional.ofNullable(video());
+    }
+
+    public Optional<Resource> getTrailer() {
+        return Optional.ofNullable(trailer());
+    }
+
+    public Optional<Resource> getBanner() {
+        return Optional.ofNullable(banner());
+    }
+
+    public Optional<Resource> getThumbnail() {
+        return Optional.ofNullable(thumbnail());
+    }
+
+    public Optional<Resource> getThumbnailHalf() {
+        return Optional.ofNullable(thumbnailHalf());
     }
 }

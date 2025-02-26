@@ -6,12 +6,14 @@ import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
+import com.tcs.admin.catalog.domain.exceptions.InternalErrorException;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.domain.validation.ValidationHandler;
 import com.tcs.admin.catalog.domain.validation.handler.Notification;
+import com.tcs.admin.catalog.domain.video.MediaResourceGateway;
 import com.tcs.admin.catalog.domain.video.Rating;
 import com.tcs.admin.catalog.domain.video.Video;
 import com.tcs.admin.catalog.domain.video.VideoGateway;
@@ -28,17 +30,20 @@ import java.util.stream.Collectors;
 public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
 
     private final VideoGateway videoGateway;
+    private final MediaResourceGateway mediaResourceGateway;
     private final CategoryGateway categoryGateway;
     private final GenreGateway genreGateway;
     private final CastMemberGateway castMemberGateway;
 
     public DefaultCreateVideoUseCase(
             final VideoGateway videoGateway,
+            final MediaResourceGateway mediaResourceGateway,
             final CategoryGateway categoryGateway,
             final GenreGateway genreGateway,
             final CastMemberGateway castMemberGateway
     ) {
         this.videoGateway = Objects.requireNonNull(videoGateway);
+        this.mediaResourceGateway = Objects.requireNonNull(mediaResourceGateway);
         this.categoryGateway = Objects.requireNonNull(categoryGateway);
         this.genreGateway = Objects.requireNonNull(genreGateway);
         this.castMemberGateway = Objects.requireNonNull(castMemberGateway);
@@ -80,7 +85,44 @@ public class DefaultCreateVideoUseCase extends CreateVideoUseCase {
     }
 
     private Video create(CreateVideoCommand aCommand, Video aVideo) {
-        return videoGateway.create(aVideo);
+        final var anId = aVideo.getId();
+
+        try {
+            final var aVideoMedia = aCommand.getVideo()
+                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, it))
+                    .orElse(null);
+
+            final var aTrailerMedia = aCommand.getTrailer()
+                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, it))
+                    .orElse(null);
+
+            final var aBannerMedia = aCommand.getBanner()
+                    .map(it -> mediaResourceGateway.storeImage(anId, it))
+                    .orElse(null);
+
+            final var aThumbMedia = aCommand.getThumbnail()
+                    .map(it -> mediaResourceGateway.storeImage(anId, it))
+                    .orElse(null);
+
+            final var aThumbHalfMedia = aCommand.getThumbnailHalf()
+                    .map(it -> mediaResourceGateway.storeImage(anId, it))
+                    .orElse(null);
+
+            return videoGateway.create(
+                    aVideo
+                            .setVideo(aVideoMedia)
+                            .setTrailer(aTrailerMedia)
+                            .setBanner(aBannerMedia)
+                            .setThumbnail(aThumbMedia)
+                            .setThumbnailHalf(aThumbHalfMedia)
+            );
+        } catch (final Throwable t) {
+            mediaResourceGateway.clearResources(anId);
+            throw InternalErrorException.with(
+                    "An error occurred when creating video [videoId:%s]".formatted(anId.getValue()),
+                    t
+            );
+        }
     }
 
     private ValidationHandler validateCategories(final Set<CategoryID> ids) {
