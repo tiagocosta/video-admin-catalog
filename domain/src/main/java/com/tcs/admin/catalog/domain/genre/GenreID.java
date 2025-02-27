@@ -1,30 +1,24 @@
 package com.tcs.admin.catalog.domain.genre;
 
 import com.tcs.admin.catalog.domain.Identifier;
-import com.tcs.admin.catalog.domain.category.CategoryID;
+import com.tcs.admin.catalog.domain.utils.IdUtils;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class GenreID extends Identifier {
 
     private final String value;
 
     private GenreID(final String value) {
-        Objects.requireNonNull(value);
-        this.value = value;
+        this.value = Objects.requireNonNull(value);
     }
 
     public static GenreID unique() {
-        return from(UUID.randomUUID());
+        return from(IdUtils.uuid());
     }
 
     public static GenreID from(final String anId) {
         return new GenreID(anId);
-    }
-
-    public static GenreID from(final UUID anId) {
-        return new GenreID(anId.toString().toLowerCase());
     }
 
     @Override

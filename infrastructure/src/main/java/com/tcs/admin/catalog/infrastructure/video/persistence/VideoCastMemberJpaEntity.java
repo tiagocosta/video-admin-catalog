@@ -4,7 +4,6 @@ import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import jakarta.persistence.*;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity(name = "VideoCastMember")
 @Table(name = "videos_cast_members")
@@ -27,7 +26,7 @@ public class VideoCastMemberJpaEntity {
 
     public static VideoCastMemberJpaEntity from(final VideoJpaEntity video, final CastMemberID castMember) {
         return new VideoCastMemberJpaEntity(
-                VideoCastMemberID.from(video.getId(), UUID.fromString(castMember.getValue())),
+                VideoCastMemberID.from(video.getId(), castMember.getValue()),
                 video
         );
     }
