@@ -886,9 +886,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
         final var expectedErrorCount = 1;
         final var expectedErrorMessage =
-                "Some cast members could not be found: %s".formatted(
-                        Fixture.CastMembers.mateus().getId().getValue()
-                                .concat(", " + Fixture.CastMembers.lucas().getId().getValue()));
+                "Some cast members could not be found: %s".formatted(Fixture.CastMembers.mateus().getId().getValue());
 
         final var aCommand = CreateVideoCommand.with(
                 expectedTitle,

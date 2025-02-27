@@ -80,7 +80,7 @@ public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
         aVideo.validate(notification);
 
         if (notification.hasErrors()) {
-            throw new NotificationException("Could not udate video aggregate", notification);
+            throw new NotificationException("Could not update video aggregate", notification);
         }
 
         return UpdateVideoOutput.from(update(aCommand, aVideo));
