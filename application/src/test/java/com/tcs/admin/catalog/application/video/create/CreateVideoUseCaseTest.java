@@ -874,10 +874,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
         final var expectedRating = Fixture.Videos.rating();
         final var expectedCategories = Set.<CategoryID>of(Fixture.Categories.prime().getId());
         final var expectedGenres = Set.<GenreID>of(Fixture.Genres.drama().getId());
-        final var expectedCastMembers = Set.<CastMemberID>of(
-                Fixture.CastMembers.mateus().getId(),
-                Fixture.CastMembers.lucas().getId()
-        );
+        final var expectedCastMembers = Set.<CastMemberID>of(Fixture.CastMembers.lucas().getId());
         final Resource expectedVideo = null;
         final Resource expectedTrailer = null;
         final Resource expectedBanner = null;
@@ -886,7 +883,7 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
 
         final var expectedErrorCount = 1;
         final var expectedErrorMessage =
-                "Some cast members could not be found: %s".formatted(Fixture.CastMembers.mateus().getId().getValue());
+                "Some cast members could not be found: %s".formatted(Fixture.CastMembers.lucas().getId().getValue());
 
         final var aCommand = CreateVideoCommand.with(
                 expectedTitle,
