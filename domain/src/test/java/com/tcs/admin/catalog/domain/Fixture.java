@@ -40,6 +40,21 @@ public final class Fixture {
         return FAKER.bool().bool();
     }
 
+    public static Video video() {
+        return Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Fixture.year(),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(Fixture.Categories.prime().getId()),
+                Set.of(Fixture.Genres.drama().getId()),
+                Set.of(Fixture.CastMembers.tiago().getId())
+        );
+    }
+
     public static final class Categories {
 
         private static final Category PRIME =
@@ -89,24 +104,6 @@ public final class Fixture {
     }
 
     public static final class Videos {
-
-        private static final Video FATS_AND_FURIOUS =
-                Video.newVideo(
-                        Fixture.title(),
-                        Fixture.Videos.description(),
-                        Fixture.year(),
-                        Fixture.duration(),
-                        Fixture.Videos.rating(),
-                        Fixture.bool(),
-                        Fixture.bool(),
-                        Set.of(Fixture.Categories.prime().getId()),
-                        Set.of(Fixture.Genres.drama().getId()),
-                        Set.of(Fixture.CastMembers.tiago().getId())
-                );
-
-        public static Video fastAndFurious() {
-            return Video.with(FATS_AND_FURIOUS);
-        }
 
         public static String description() {
             return FAKER.options().option(

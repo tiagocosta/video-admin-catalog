@@ -77,7 +77,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
 
         final var expectedId = aVideo.getId();
 
@@ -167,7 +167,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
 
         final var expectedId = aVideo.getId();
 
@@ -254,7 +254,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
 
         final var expectedId = aVideo.getId();
 
@@ -338,7 +338,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
 
         final var expectedId = aVideo.getId();
 
@@ -422,7 +422,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = null;
         final Resource expectedThumbHalf = null;
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
 
         final var expectedId = aVideo.getId();
 
@@ -506,7 +506,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'title' should not be null";
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -570,7 +570,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'title' should not be empty";
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -634,7 +634,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'rating' should not be null";
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -698,7 +698,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'rating' should not be null";
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -762,7 +762,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorCount = 1;
         final var expectedErrorMessage = "'launchedAt' should not be null";
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -830,7 +830,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorMessage =
                 "Some categories could not be found: %s".formatted(Fixture.Categories.prime().getId().getValue());
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -906,7 +906,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorMessage =
                 "Some genres could not be found: %s".formatted(Fixture.Genres.drama().getId().getValue());
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -979,7 +979,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final var expectedErrorMessage =
                 "Some cast members could not be found: %s".formatted(Fixture.CastMembers.mateus().getId().getValue());
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         when(videoGateway.findById(any()))
@@ -1051,7 +1051,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
         final Resource expectedThumb = Fixture.Videos.resource(Resource.Type.THUMBNAIL);
         final Resource expectedThumbHalf = Fixture.Videos.resource(Resource.Type.THUMBNAIL_HALF);
 
-        final var aVideo = Fixture.Videos.fastAndFurious();
+        final var aVideo = Fixture.video();
         final var expectedId = aVideo.getId();
 
         final var expectedErrorMessage = "An error occurred when updating video [videoId:";
@@ -1111,7 +1111,7 @@ public class UpdateVideoUseCaseTest extends UseCaseTest {
                     UUID.randomUUID().toString(),
                     resource.name(),
                     "/media/img",
-                    "/enconded",
+                    "/encoded",
                     MediaStatus.PENDING
             );
         });
