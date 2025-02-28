@@ -1,6 +1,5 @@
 package com.tcs.admin.catalog.domain;
 
-import com.github.javafaker.Faker;
 import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
 import com.tcs.admin.catalog.domain.category.Category;
@@ -10,6 +9,7 @@ import com.tcs.admin.catalog.domain.video.Rating;
 import com.tcs.admin.catalog.domain.video.Resource;
 import com.tcs.admin.catalog.domain.video.Video;
 import com.tcs.admin.catalog.domain.video.VideoPreview;
+import net.datafaker.Faker;
 
 import java.time.Instant;
 import java.time.Year;
@@ -24,7 +24,10 @@ public final class Fixture {
     }
 
     public static Instant instant() {
-        return FAKER.date().birthday().toInstant();
+        return FAKER.timeAndDate().between(
+                Instant.ofEpochSecond(Instant.MIN.getEpochSecond()),
+                Instant.ofEpochSecond(Instant.MIN.getEpochSecond())
+        );
     }
 
     public static Year year() {
