@@ -1,12 +1,16 @@
 package com.tcs.admin.catalog.infrastructure.video;
 
+import com.tcs.admin.catalog.domain.castmember.CastMemberID;
+import com.tcs.admin.catalog.domain.category.CategoryID;
+import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
-import com.tcs.admin.catalog.domain.video.Video;
-import com.tcs.admin.catalog.domain.video.VideoGateway;
-import com.tcs.admin.catalog.domain.video.VideoID;
-import com.tcs.admin.catalog.domain.video.VideoSearchQuery;
+import com.tcs.admin.catalog.domain.utils.CollectionUtils;
+import com.tcs.admin.catalog.domain.video.*;
+import com.tcs.admin.catalog.infrastructure.utils.SqlUtils;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoJpaEntity;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
@@ -48,8 +52,27 @@ public class DefaultVideoGateway implements VideoGateway {
     }
 
     @Override
-    public Pagination<Video> findAll(VideoSearchQuery aQuery) {
-        return null;
+    public Pagination<VideoPreview> findAll(VideoSearchQuery aQuery) {
+        final var aPage = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
+        );
+
+        final var actualPage = this.videoRepository.findAll(
+                SqlUtils.like(aQuery.terms()),
+                CollectionUtils.mapTo(aQuery.categories(), CategoryID::getValue),
+                CollectionUtils.mapTo(aQuery.genres(), GenreID::getValue),
+                CollectionUtils.mapTo(aQuery.castMembers(), CastMemberID::getValue),
+                aPage
+        );
+
+        return new Pagination<>(
+                actualPage.getNumber(),
+                actualPage.getSize(),
+                actualPage.getTotalElements(),
+                actualPage.toList()
+        );
     }
 
     private Video save(final Video aVideo) {
