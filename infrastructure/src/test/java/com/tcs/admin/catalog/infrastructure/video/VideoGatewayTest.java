@@ -144,17 +144,17 @@ public class VideoGatewayTest {
         final var expectedCastMembers = Set.<CastMemberID>of();
 
         final var aVideo = Video.newVideo(
-                        expectedTitle,
-                        expectedDescription,
-                        expectedLaunchYear,
-                        expectedDuration,
-                        expectedRating,
-                        expectedOpened,
-                        expectedPublished,
-                        expectedCategories,
-                        expectedGenres,
-                        expectedCastMembers
-                );
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear,
+                expectedDuration,
+                expectedRating,
+                expectedOpened,
+                expectedPublished,
+                expectedCategories,
+                expectedGenres,
+                expectedCastMembers
+        );
 
         final var actualVideo = videoGateway.create(aVideo);
 
@@ -199,5 +199,105 @@ public class VideoGatewayTest {
         Assertions.assertNull(persistedVideo.getThumbnailHalf());
         Assertions.assertNotNull(persistedVideo.getCreatedAt());
         Assertions.assertNotNull(persistedVideo.getUpdatedAt());
+    }
+
+    @Test
+    @Transactional
+    public void givenValidVideo_whenCallsUpdate_thenReturnNewVideo() {
+        final var aVideo = videoGateway.create(Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Fixture.year(),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        final var prime = categoryGateway.create(Fixture.Categories.prime());
+        final var drama = genreGateway.create(Fixture.Genres.drama());
+        final var mateus = castMemberGateway.create(Fixture.CastMembers.mateus());
+
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Fixture.year();
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.<CategoryID>of(prime.getId());
+        final var expectedGenres = Set.<GenreID>of(drama.getId());
+        final var expectedCastMembers = Set.<CastMemberID>of(mateus.getId());
+
+        final var expectedVideo = Fixture.videoMedia();
+        final var expectedTrailer = Fixture.videoMedia();
+        final var expectedBanner = Fixture.imageMedia();
+        final var expectedThumb = Fixture.imageMedia();
+        final var expectedThumbHalf = Fixture.imageMedia();
+
+        final var updateVideo = Video.with(aVideo).update(
+                        expectedTitle,
+                        expectedDescription,
+                        expectedLaunchYear,
+                        expectedDuration,
+                        expectedRating,
+                        expectedOpened,
+                        expectedPublished,
+                        expectedCategories,
+                        expectedGenres,
+                        expectedCastMembers
+                )
+                .setVideo(expectedVideo)
+                .setTrailer(expectedTrailer)
+                .setBanner(expectedBanner)
+                .setThumbnail(expectedThumb)
+                .setThumbnailHalf(expectedThumbHalf);
+
+        final var actualVideo = videoGateway.update(updateVideo);
+
+        Assertions.assertNotNull(actualVideo);
+        Assertions.assertNotNull(actualVideo.getId());
+        Assertions.assertEquals(expectedTitle, actualVideo.getTitle());
+        Assertions.assertEquals(expectedDescription, actualVideo.getDescription());
+        Assertions.assertEquals(expectedLaunchYear, actualVideo.getLaunchedAt());
+        Assertions.assertEquals(expectedDuration, actualVideo.getDuration());
+        Assertions.assertEquals(expectedOpened, actualVideo.isOpened());
+        Assertions.assertEquals(expectedPublished, actualVideo.isPublished());
+        Assertions.assertEquals(expectedRating, actualVideo.getRating());
+        Assertions.assertEquals(expectedCategories, actualVideo.getCategories());
+        Assertions.assertEquals(expectedGenres, actualVideo.getGenres());
+        Assertions.assertEquals(expectedCastMembers, actualVideo.getCastMembers());
+        Assertions.assertEquals(expectedVideo.name(), actualVideo.getVideo().get().name());
+        Assertions.assertEquals(expectedTrailer.name(), actualVideo.getTrailer().get().name());
+        Assertions.assertEquals(expectedBanner.name(), actualVideo.getBanner().get().name());
+        Assertions.assertEquals(expectedThumb.name(), actualVideo.getThumbnail().get().name());
+        Assertions.assertEquals(expectedThumbHalf.name(), actualVideo.getThumbnailHalf().get().name());
+        Assertions.assertNotNull(actualVideo.getCreatedAt());
+        Assertions.assertTrue(actualVideo.getUpdatedAt().isAfter(aVideo.getUpdatedAt()));
+
+        final var persistedVideo = videoRepository.findById(aVideo.getId().getValue()).get();
+
+        Assertions.assertNotNull(persistedVideo);
+        Assertions.assertNotNull(persistedVideo.getId());
+        Assertions.assertEquals(expectedTitle, persistedVideo.getTitle());
+        Assertions.assertEquals(expectedDescription, persistedVideo.getDescription());
+        Assertions.assertEquals(expectedLaunchYear, Year.of(persistedVideo.getYearLaunched()));
+        Assertions.assertEquals(expectedDuration, persistedVideo.getDuration());
+        Assertions.assertEquals(expectedOpened, persistedVideo.isOpened());
+        Assertions.assertEquals(expectedPublished, persistedVideo.isPublished());
+        Assertions.assertEquals(expectedRating, persistedVideo.getRating());
+        Assertions.assertEquals(expectedCategories, persistedVideo.getCategoriesID());
+        Assertions.assertEquals(expectedGenres, persistedVideo.getGenresID());
+        Assertions.assertEquals(expectedCastMembers, persistedVideo.getCastMembersID());
+        Assertions.assertEquals(expectedVideo.name(), persistedVideo.getVideo().getName());
+        Assertions.assertEquals(expectedTrailer.name(), persistedVideo.getTrailer().getName());
+        Assertions.assertEquals(expectedBanner.name(), persistedVideo.getBanner().getName());
+        Assertions.assertEquals(expectedThumb.name(), persistedVideo.getThumbnail().getName());
+        Assertions.assertEquals(expectedThumbHalf.name(), persistedVideo.getThumbnailHalf().getName());
+        Assertions.assertNotNull(persistedVideo.getCreatedAt());
+        Assertions.assertTrue(persistedVideo.getUpdatedAt().isAfter(aVideo.getUpdatedAt()));
     }
 }
