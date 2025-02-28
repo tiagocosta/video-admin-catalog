@@ -42,7 +42,7 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
     @Override
     public Optional<CastMember> findById(final CastMemberID anId) {
         return this.repository.findById(anId.getValue())
-                .map(CastMemberJpaEntity::toAggregate);
+                .map(CastMemberJpaEntity::toDomain);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
                 pageResult.getNumber(),
                 pageResult.getSize(),
                 pageResult.getTotalElements(),
-                pageResult.map(CastMemberJpaEntity::toAggregate).stream().toList()
+                pageResult.map(CastMemberJpaEntity::toDomain).stream().toList()
         );
     }
 
@@ -82,7 +82,7 @@ public class CastMemberMySQLGateway implements CastMemberGateway {
 
     private CastMember save(final CastMember aCastMember) {
         return this.repository.save(CastMemberJpaEntity.from(aCastMember))
-                .toAggregate();
+                .toDomain();
     }
 
     private Specification<CastMemberJpaEntity> assembleSpecifications(String str) {

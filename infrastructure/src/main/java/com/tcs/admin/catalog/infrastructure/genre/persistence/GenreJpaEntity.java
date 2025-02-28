@@ -69,7 +69,7 @@ public class GenreJpaEntity {
         return anEntity;
     }
 
-    public Genre toAggregate() {
+    public Genre toDomain() {
         return Genre.with(
                 GenreID.from(this.id),
                 this.name,

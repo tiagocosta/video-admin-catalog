@@ -34,7 +34,7 @@ public class DefaultVideoGateway implements VideoGateway {
     @Transactional(readOnly = true)
     public Optional<Video> findById(final VideoID anId) {
         return this.videoRepository.findById(anId.getValue())
-                .map(VideoJpaEntity::toAggregate);
+                .map(VideoJpaEntity::toDomain);
     }
 
     @Override
@@ -77,6 +77,6 @@ public class DefaultVideoGateway implements VideoGateway {
 
     private Video save(final Video aVideo) {
         return this.videoRepository.save(VideoJpaEntity.from(aVideo))
-                .toAggregate();
+                .toDomain();
     }
 }

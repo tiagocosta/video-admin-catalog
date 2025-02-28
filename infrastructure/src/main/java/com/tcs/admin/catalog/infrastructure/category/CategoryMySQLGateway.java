@@ -43,7 +43,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
     @Override
     public Optional<Category> findById(final CategoryID anId) {
         return this.repository.findById(anId.getValue())
-                .map(CategoryJpaEntity::toAggregate);
+                .map(CategoryJpaEntity::toDomain);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
                 pageResult.getNumber(),
                 pageResult.getSize(),
                 pageResult.getTotalElements(),
-                pageResult.map(CategoryJpaEntity::toAggregate).stream().toList()
+                pageResult.map(CategoryJpaEntity::toDomain).stream().toList()
         );
     }
 
@@ -88,7 +88,7 @@ public class CategoryMySQLGateway implements CategoryGateway {
 
     private Category save(final Category aCategory) {
         CategoryJpaEntity category = this.repository.save(CategoryJpaEntity.from(aCategory));
-        return category.toAggregate();
+        return category.toDomain();
     }
 
     private Specification<CategoryJpaEntity> assembleSpecifications(String str) {

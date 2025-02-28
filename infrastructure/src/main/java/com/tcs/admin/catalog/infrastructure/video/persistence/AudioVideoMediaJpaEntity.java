@@ -51,7 +51,7 @@ public class AudioVideoMediaJpaEntity {
         );
     }
 
-    public AudioVideoMedia toAggregate() {
+    public AudioVideoMedia toDomain() {
         return AudioVideoMedia.with(
                 getId(),
                 getName(),

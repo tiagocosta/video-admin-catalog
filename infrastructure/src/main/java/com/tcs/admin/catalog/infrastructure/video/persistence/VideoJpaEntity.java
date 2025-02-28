@@ -151,7 +151,7 @@ public class VideoJpaEntity {
         return anEntity;
     }
 
-    public Video toAggregate() {
+    public Video toDomain() {
         return Video.with(
                 VideoID.from(getId()),
                 getTitle(),
@@ -164,19 +164,19 @@ public class VideoJpaEntity {
                 getCreatedAt(),
                 getUpdatedAt(),
                 Optional.ofNullable(getBanner())
-                        .map(ImageMediaJpaEntity::toAggregate)
+                        .map(ImageMediaJpaEntity::toDomain)
                         .orElse(null),
                 Optional.ofNullable(getThumbnail())
-                        .map(ImageMediaJpaEntity::toAggregate)
+                        .map(ImageMediaJpaEntity::toDomain)
                         .orElse(null),
                 Optional.ofNullable(getThumbnailHalf())
-                        .map(ImageMediaJpaEntity::toAggregate)
+                        .map(ImageMediaJpaEntity::toDomain)
                         .orElse(null),
                 Optional.ofNullable(getTrailer())
-                        .map(AudioVideoMediaJpaEntity::toAggregate)
+                        .map(AudioVideoMediaJpaEntity::toDomain)
                         .orElse(null),
                 Optional.ofNullable(getVideo())
-                        .map(AudioVideoMediaJpaEntity::toAggregate)
+                        .map(AudioVideoMediaJpaEntity::toDomain)
                         .orElse(null),
                 getCategories().stream()
                         .map(it -> CategoryID.from(it.getId().getCategoryId()))

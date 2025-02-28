@@ -41,7 +41,7 @@ public class GenreMySQLGateway implements GenreGateway {
     @Override
     public Optional<Genre> findById(GenreID anId) {
         return this.genreRepository.findById(anId.getValue())
-                .map(GenreJpaEntity::toAggregate);
+                .map(GenreJpaEntity::toDomain);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class GenreMySQLGateway implements GenreGateway {
                 pageResult.getNumber(),
                 pageResult.getSize(),
                 pageResult.getTotalElements(),
-                pageResult.map(GenreJpaEntity::toAggregate).stream().toList()
+                pageResult.map(GenreJpaEntity::toDomain).stream().toList()
         );
     }
 
@@ -78,7 +78,7 @@ public class GenreMySQLGateway implements GenreGateway {
     }
 
     private Genre save(Genre aGenre) {
-        return this.genreRepository.save(GenreJpaEntity.from(aGenre)).toAggregate();
+        return this.genreRepository.save(GenreJpaEntity.from(aGenre)).toDomain();
     }
 
     private Specification<GenreJpaEntity> assembleSpecification(final String terms) {

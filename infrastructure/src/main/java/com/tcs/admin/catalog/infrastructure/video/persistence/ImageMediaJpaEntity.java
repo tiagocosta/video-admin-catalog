@@ -40,7 +40,7 @@ public class ImageMediaJpaEntity {
         );
     }
 
-    public ImageMedia toAggregate() {
+    public ImageMedia toDomain() {
         return ImageMedia.with(
                 getId(),
                 getName(),
