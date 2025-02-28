@@ -22,17 +22,18 @@ public class DefaultVideoGateway implements VideoGateway {
 
     @Override
     @Transactional
-    public Video create(Video aVideo) {
+    public Video create(final Video aVideo) {
         return save(aVideo);
     }
 
     @Override
-    public Optional<Video> findById(VideoID anId) {
-        return Optional.empty();
+    public Optional<Video> findById(final VideoID anId) {
+        return this.videoRepository.findById(anId.getValue())
+                .map(VideoJpaEntity::toAggregate);
     }
 
     @Override
-    public void deleteById(VideoID anId) {
+    public void deleteById(final VideoID anId) {
         final var id = anId.getValue();
         if (this.videoRepository.existsById(id)) {
             this.videoRepository.deleteById(id);
@@ -41,7 +42,7 @@ public class DefaultVideoGateway implements VideoGateway {
 
     @Override
     @Transactional
-    public Video update(Video aVideo) {
+    public Video update(final Video aVideo) {
         return save(aVideo);
     }
 
@@ -50,7 +51,7 @@ public class DefaultVideoGateway implements VideoGateway {
         return null;
     }
 
-    private Video save(Video aVideo) {
+    private Video save(final Video aVideo) {
         return this.videoRepository.save(VideoJpaEntity.from(aVideo))
                 .toAggregate();
     }
