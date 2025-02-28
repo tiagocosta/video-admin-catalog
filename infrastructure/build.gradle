@@ -52,6 +52,8 @@ dependencies {
     testImplementation('org.testcontainers:junit-jupiter')
     testImplementation('org.testcontainers:mysql')
 
+    testImplementation(project(path: ':domain', configuration: 'testClasses'))
+
     runtimeOnly('com.h2database:h2')
 }
 
