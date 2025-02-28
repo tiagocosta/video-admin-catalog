@@ -9,6 +9,7 @@ import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.domain.video.Video;
+import com.tcs.admin.catalog.domain.video.VideoID;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -203,7 +204,7 @@ public class VideoGatewayTest {
 
     @Test
     @Transactional
-    public void givenValidVideo_whenCallsUpdate_thenReturnNewVideo() {
+    public void givenValidVideo_whenCallsUpdate_thenReturnUpdatedVideo() {
         final var aVideo = videoGateway.create(Video.newVideo(
                 Fixture.title(),
                 Fixture.Videos.description(),
@@ -299,5 +300,38 @@ public class VideoGatewayTest {
         Assertions.assertEquals(expectedThumbHalf.name(), persistedVideo.getThumbnailHalf().getName());
         Assertions.assertNotNull(persistedVideo.getCreatedAt());
         Assertions.assertTrue(persistedVideo.getUpdatedAt().isAfter(aVideo.getUpdatedAt()));
+    }
+
+    @Test
+    public void givenValidVideoId_whenCallsDeleteById_thenDeleteVideo() {
+        final var aVideo = videoGateway.create(Video.newVideo(
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Fixture.year(),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        Assertions.assertEquals(1, videoRepository.count());
+
+        final var expectedID = aVideo.getId();
+
+        videoGateway.deleteById(expectedID);
+
+        Assertions.assertEquals(0, videoRepository.count());
+    }
+
+    @Test
+    public void givenInvalidVideoID_whenCallsDeleteById_thenOk() {
+        Assertions.assertEquals(0, videoRepository.count());
+
+        videoGateway.deleteById(VideoID.from("invalid"));
+
+        Assertions.assertEquals(0, videoRepository.count());
     }
 }
