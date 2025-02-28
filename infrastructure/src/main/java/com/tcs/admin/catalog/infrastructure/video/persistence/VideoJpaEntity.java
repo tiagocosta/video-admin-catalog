@@ -3,6 +3,7 @@ package com.tcs.admin.catalog.infrastructure.video.persistence;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.genre.GenreID;
+import com.tcs.admin.catalog.domain.utils.CollectionUtils;
 import com.tcs.admin.catalog.domain.video.Rating;
 import com.tcs.admin.catalog.domain.video.Video;
 import com.tcs.admin.catalog.domain.video.VideoID;
@@ -344,5 +345,26 @@ public class VideoJpaEntity {
 
     public void setCastMembers(Set<VideoCastMemberJpaEntity> castMembers) {
         this.castMembers = castMembers;
+    }
+
+    public Set<CategoryID> getCategoriesID() {
+        return CollectionUtils.mapTo(
+                getCategories(),
+                it -> CategoryID.from(it.getId().getCategoryId())
+        );
+    }
+
+    public Set<GenreID> getGenresID() {
+        return CollectionUtils.mapTo(
+                getGenres(),
+                it -> GenreID.from(it.getId().getGenreId())
+        );
+    }
+
+    public Set<CastMemberID> getCastMembersID() {
+        return CollectionUtils.mapTo(
+                getCastMembers(),
+                it -> CastMemberID.from(it.getId().getCastMemberId())
+        );
     }
 }

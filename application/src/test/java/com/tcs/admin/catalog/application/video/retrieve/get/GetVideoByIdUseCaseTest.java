@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
@@ -120,12 +119,12 @@ public class GetVideoByIdUseCaseTest extends UseCaseTest {
     }
 
     private AudioVideoMedia audioVideo(final Resource.Type type) {
-        final var checksum = IdUtils.uuid();
         return AudioVideoMedia.with(
-                checksum,
+                IdUtils.uuid(),
+                "123",
                 type.name().toLowerCase(),
-                "/media/videos/" + checksum,
-                "enconded",
+                "/media/videos/123",
+                "encoded",
                 MediaStatus.PENDING
         );
     }

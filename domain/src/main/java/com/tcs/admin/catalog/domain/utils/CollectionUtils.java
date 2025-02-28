@@ -10,20 +10,20 @@ public final class CollectionUtils {
     private CollectionUtils() {}
 
     public static <IN, OUT> List<OUT> mapTo(final List<IN> list, final Function<IN, OUT> mapper) {
-        if (nullOrEmpty(list)) return null;
+        if (list == null ) return null;
         return list.stream()
                 .map(mapper)
                 .toList();
     }
 
     public static <IN, OUT> Set<OUT> mapTo(final Set<IN> set, final Function<IN, OUT> mapper) {
-        if (nullOrEmpty(set)) return null;
+        if (set == null) return null;
         return set.stream()
                 .map(mapper)
                 .collect(Collectors.toSet());
     }
 
-    private static <IN> boolean nullOrEmpty(List<IN> list) {
+    private static <IN> boolean nullIfEmpty(List<IN> list) {
         return list == null || list.isEmpty();
     }
 

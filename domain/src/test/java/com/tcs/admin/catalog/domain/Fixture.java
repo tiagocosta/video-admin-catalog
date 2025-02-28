@@ -5,10 +5,7 @@ import com.tcs.admin.catalog.domain.castmember.CastMemberType;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.utils.IdUtils;
-import com.tcs.admin.catalog.domain.video.Rating;
-import com.tcs.admin.catalog.domain.video.Resource;
-import com.tcs.admin.catalog.domain.video.Video;
-import com.tcs.admin.catalog.domain.video.VideoPreview;
+import com.tcs.admin.catalog.domain.video.*;
 import net.datafaker.Faker;
 
 import java.time.Instant;
@@ -46,8 +43,22 @@ public final class Fixture {
         );
     }
 
+    public static String location() {
+        return FAKER.options().option(
+                "/media"
+        );
+    }
+
+    public static String checksum() {
+        return FAKER.random().hex();
+    }
+
     public static boolean bool() {
         return FAKER.bool().bool();
+    }
+
+    public static MediaStatus mediaStatus() {
+        return FAKER.options().option(MediaStatus.values());
     }
 
     public static Video video() {
@@ -72,6 +83,22 @@ public final class Fixture {
                 Fixture.Videos.description(),
                 Fixture.instant(),
                 Fixture.instant()
+        );
+    }
+
+    public static AudioVideoMedia videoMedia() {
+        return AudioVideoMedia.with(
+                Fixture.checksum(),
+                Fixture.name(),
+                Fixture.location()
+        );
+    }
+
+    public static ImageMedia imageMedia() {
+        return ImageMedia.with(
+                Fixture.checksum(),
+                Fixture.name(),
+                Fixture.location()
         );
     }
 

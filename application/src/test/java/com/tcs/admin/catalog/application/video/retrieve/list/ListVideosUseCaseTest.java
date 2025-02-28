@@ -152,11 +152,12 @@ public class ListVideosUseCaseTest extends UseCaseTest {
     }
 
     private AudioVideoMedia audioVideo(final Resource.Type type) {
-        final var checksum = IdUtils.uuid();
+        final var id = IdUtils.uuid();
         return AudioVideoMedia.with(
-                checksum,
+                id,
+                "123",
                 type.name().toLowerCase(),
-                "/media/videos/" + checksum,
+                "/media/videos/123",
                 "encoded",
                 MediaStatus.PENDING
         );

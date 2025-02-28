@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
@@ -1002,9 +1001,10 @@ public class CreateVideoUseCaseTest extends UseCaseTest {
             final var resource = t.getArgument(1, Resource.class);
             return AudioVideoMedia.with(
                     IdUtils.uuid(),
+                    "123",
                     resource.name(),
                     "/media/img",
-                    "/enconded",
+                    "/encoded",
                     MediaStatus.PENDING
             );
         });

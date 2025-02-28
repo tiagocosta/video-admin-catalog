@@ -150,7 +150,7 @@ public class VideoTest {
         );
 
         final var aVideoMedia =
-                AudioVideoMedia.with("abc", "video.mp4", "123/videos", "", MediaStatus.PENDING);
+                AudioVideoMedia.with("abc", "video.mp4", "123/videos");
         final var actualVideo = Video.with(aVideo).setVideo(aVideoMedia);
 
         Assertions.assertNotNull(actualVideo);
@@ -203,7 +203,7 @@ public class VideoTest {
         );
 
         final var aTrailerMedia =
-                AudioVideoMedia.with("abc", "video_trailer.mp4", "123/videos", "", MediaStatus.PENDING);
+                AudioVideoMedia.with("abc", "video_trailer.mp4", "123/videos");
         final var actualVideo = Video.with(aVideo).setTrailer(aTrailerMedia);
 
         Assertions.assertNotNull(actualVideo);
