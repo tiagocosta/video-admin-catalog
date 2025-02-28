@@ -115,7 +115,7 @@ public class VideoJpaEntity {
         this.castMembers = new HashSet<>(3);
     }
 
-    public VideoJpaEntity from(final Video aVideo) {
+    public static VideoJpaEntity from(final Video aVideo) {
         final var anEntity = new VideoJpaEntity(
                 aVideo.getId().getValue(),
                 aVideo.getTitle(),
