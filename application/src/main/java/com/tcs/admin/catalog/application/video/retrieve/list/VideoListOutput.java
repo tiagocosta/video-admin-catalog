@@ -1,6 +1,6 @@
 package com.tcs.admin.catalog.application.video.retrieve.list;
 
-import com.tcs.admin.catalog.domain.video.Video;
+import com.tcs.admin.catalog.domain.video.VideoPreview;
 
 import java.time.Instant;
 
@@ -12,13 +12,13 @@ public record VideoListOutput(
         Instant updatedAt
 ) {
 
-    public static VideoListOutput from(final Video aVideo) {
+    public static VideoListOutput from(final VideoPreview aVideoPreview) {
         return new VideoListOutput(
-                aVideo.getId().getValue(),
-                aVideo.getTitle(),
-                aVideo.getDescription(),
-                aVideo.getCreatedAt(),
-                aVideo.getUpdatedAt()
+                aVideoPreview.id(),
+                aVideoPreview.title(),
+                aVideoPreview.description(),
+                aVideoPreview.createdAt(),
+                aVideoPreview.updateAt()
         );
     }
 }

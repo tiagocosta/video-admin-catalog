@@ -12,7 +12,7 @@ import java.util.Set;
 public interface VideoRepository extends JpaRepository<VideoJpaEntity, String> {
 
     @Query("""
-            select new com.tcs.admin.catalog.domain.videoVideoPreview(
+            select new com.tcs.admin.catalog.domain.video.VideoPreview(
                 v.id as id,
                 v.title as title,
                 v.description as description,

@@ -5,10 +5,13 @@ import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.genre.Genre;
+import com.tcs.admin.catalog.domain.utils.IdUtils;
 import com.tcs.admin.catalog.domain.video.Rating;
 import com.tcs.admin.catalog.domain.video.Resource;
 import com.tcs.admin.catalog.domain.video.Video;
+import com.tcs.admin.catalog.domain.video.VideoPreview;
 
+import java.time.Instant;
 import java.time.Year;
 import java.util.Set;
 
@@ -18,6 +21,10 @@ public final class Fixture {
 
     public static String name() {
         return FAKER.name().fullName();
+    }
+
+    public static Instant instant() {
+        return FAKER.date().birthday().toInstant();
     }
 
     public static Year year() {
@@ -52,6 +59,16 @@ public final class Fixture {
                 Set.of(Fixture.Categories.prime().getId()),
                 Set.of(Fixture.Genres.drama().getId()),
                 Set.of(Fixture.CastMembers.tiago().getId())
+        );
+    }
+
+    public static VideoPreview videoPreview() {
+        return new VideoPreview(
+                IdUtils.uuid(),
+                Fixture.title(),
+                Fixture.Videos.description(),
+                Fixture.instant(),
+                Fixture.instant()
         );
     }
 

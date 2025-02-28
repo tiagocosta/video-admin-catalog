@@ -14,7 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -37,8 +36,8 @@ public class ListVideosUseCaseTest extends UseCaseTest {
     @Test
     public void givenValidQuery_whenCallsList_thenReturnVideos() {
         final var videos = List.of(
-                Fixture.video(),
-                Fixture.video()
+                Fixture.videoPreview(),
+                Fixture.videoPreview()
         );
 
         final var expectedPage = 0;
@@ -50,7 +49,16 @@ public class ListVideosUseCaseTest extends UseCaseTest {
         final var expectedItems = videos.stream().map(VideoListOutput::from).toList();
 
         final var aQuery =
-                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        null,
+                        null,
+                        null
+                );
 
         final var expectedPagination =
                 new Pagination<>(expectedPage, expectedPerPage, videos.size(), videos);
@@ -74,7 +82,7 @@ public class ListVideosUseCaseTest extends UseCaseTest {
 
     @Test
     public void givenValidQuery_whenHasNoVideo_thenReturnEmptyVideo() {
-        final var videos = List.<Video>of();
+        final var videos = List.<VideoPreview>of();
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -83,7 +91,16 @@ public class ListVideosUseCaseTest extends UseCaseTest {
         final var expectedDirection = "asc";
 
         final var aQuery =
-                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        null,
+                        null,
+                        null
+                );
 
         final var expectedPagination =
                 new Pagination<>(expectedPage, expectedPerPage, videos.size(), videos);
@@ -112,7 +129,16 @@ public class ListVideosUseCaseTest extends UseCaseTest {
         final var expectedErrorMessage = "gateway error";
 
         final var aQuery =
-                new VideoSearchQuery(expectedPage, expectedPerPage, expectedTerms, expectedSort, expectedDirection);
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        null,
+                        null,
+                        null
+                );
 
         when(videoGateway.findAll(eq(aQuery)))
                 .thenThrow(new IllegalStateException(expectedErrorMessage));
