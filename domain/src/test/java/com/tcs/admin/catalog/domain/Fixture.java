@@ -8,6 +8,8 @@ import com.tcs.admin.catalog.domain.utils.IdUtils;
 import com.tcs.admin.catalog.domain.video.*;
 import net.datafaker.Faker;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.Year;
 import java.util.Set;
@@ -32,7 +34,9 @@ public final class Fixture {
     }
 
     public static Double duration() {
-        return FAKER.random().nextDouble() * 300;
+        return BigDecimal.valueOf(FAKER.random().nextDouble() * 300)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     public static String title() {
