@@ -111,8 +111,15 @@ public final class Fixture {
         private static final Category PRIME =
                 Category.newCategory("Prime", "Amazon Prime", true);
 
+        private static final Category NETFLIX =
+                Category.newCategory("Netflix", "Netflix", true);
+
         public static Category prime() {
             return Category.with(PRIME);
+        }
+
+        public static Category netflix() {
+            return Category.with(NETFLIX);
         }
     }
 
@@ -121,8 +128,15 @@ public final class Fixture {
         private static final Genre DRAMA =
                 Genre.newGenre("Drama", true);
 
+        private static final Genre ROMANCE =
+                Genre.newGenre("Romance", true);
+
         public static Genre drama() {
             return Genre.with(DRAMA);
+        }
+
+        public static Genre romance() {
+            return Genre.with(ROMANCE);
         }
     }
 

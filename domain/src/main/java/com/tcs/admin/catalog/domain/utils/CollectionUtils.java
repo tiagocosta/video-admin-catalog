@@ -23,11 +23,17 @@ public final class CollectionUtils {
                 .collect(Collectors.toSet());
     }
 
-    private static <IN> boolean nullIfEmpty(List<IN> list) {
-        return list == null || list.isEmpty();
+    public static <T> List<T> nullIfEmpty(final List<T> values) {
+        if (values == null || values.isEmpty()) {
+            return null;
+        }
+        return values;
     }
 
-    private static <IN> boolean nullOrEmpty(Set<IN> set) {
-        return set == null || set.isEmpty();
+    public static <T> Set<T> nullIfEmpty(final Set<T> values) {
+        if (values == null || values.isEmpty()) {
+            return null;
+        }
+        return values;
     }
 }

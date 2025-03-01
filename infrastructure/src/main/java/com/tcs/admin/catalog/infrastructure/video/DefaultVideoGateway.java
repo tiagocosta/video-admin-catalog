@@ -1,12 +1,8 @@
 package com.tcs.admin.catalog.infrastructure.video;
 
-import com.tcs.admin.catalog.domain.castmember.CastMemberID;
-import com.tcs.admin.catalog.domain.category.CategoryID;
-import com.tcs.admin.catalog.domain.genre.GenreID;
+import com.tcs.admin.catalog.domain.Identifier;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
-import com.tcs.admin.catalog.domain.utils.CollectionUtils;
 import com.tcs.admin.catalog.domain.video.*;
-import com.tcs.admin.catalog.infrastructure.utils.SqlUtils;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoJpaEntity;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.tcs.admin.catalog.domain.utils.CollectionUtils.mapTo;
+import static com.tcs.admin.catalog.domain.utils.CollectionUtils.nullIfEmpty;
+import static com.tcs.admin.catalog.infrastructure.utils.SqlUtils.like;
+import static com.tcs.admin.catalog.infrastructure.utils.SqlUtils.upper;
 
 @Component
 public class DefaultVideoGateway implements VideoGateway {
@@ -62,10 +63,10 @@ public class DefaultVideoGateway implements VideoGateway {
         );
 
         final var actualPage = this.videoRepository.findAll(
-                SqlUtils.like(aQuery.terms()),
-                CollectionUtils.mapTo(aQuery.categories(), CategoryID::getValue),
-                CollectionUtils.mapTo(aQuery.genres(), GenreID::getValue),
-                CollectionUtils.mapTo(aQuery.castMembers(), CastMemberID::getValue),
+                like(upper(aQuery.terms())),
+                nullIfEmpty(mapTo(aQuery.categories(), Identifier::getValue)),
+                nullIfEmpty(mapTo(aQuery.genres(), Identifier::getValue)),
+                nullIfEmpty(mapTo(aQuery.castMembers(), Identifier::getValue)),
                 aPage
         );
 

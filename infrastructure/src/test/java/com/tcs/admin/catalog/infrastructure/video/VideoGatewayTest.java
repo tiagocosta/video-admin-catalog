@@ -2,18 +2,24 @@ package com.tcs.admin.catalog.infrastructure.video;
 
 import com.tcs.admin.catalog.IntegrationTest;
 import com.tcs.admin.catalog.domain.Fixture;
+import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberGateway;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
+import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
+import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
 import com.tcs.admin.catalog.domain.video.Video;
 import com.tcs.admin.catalog.domain.video.VideoID;
+import com.tcs.admin.catalog.domain.video.VideoSearchQuery;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,18 +44,27 @@ public class VideoGatewayTest {
     @Autowired
     private VideoRepository videoRepository;
 
+    private CastMember mateus;
+    private CastMember lucas;
+    private Category prime;
+    private Category netflix;
+    private Genre drama;
+    private Genre romance;
+
     @BeforeEach
-    void cleanUp() {
+    void setUp() {
         this.videoRepository.deleteAll();
+        mateus = castMemberGateway.create(Fixture.CastMembers.mateus());
+        lucas = castMemberGateway.create(Fixture.CastMembers.lucas());
+        prime = categoryGateway.create(Fixture.Categories.prime());
+        netflix = categoryGateway.create(Fixture.Categories.netflix());
+        drama = genreGateway.create(Fixture.Genres.drama());
+        romance = genreGateway.create(Fixture.Genres.romance());
     }
 
     @Test
     @Transactional
     public void givenValidVideo_whenCallsCreate_thenReturnNewVideo() {
-        final var prime = categoryGateway.create(Fixture.Categories.prime());
-        final var drama = genreGateway.create(Fixture.Genres.drama());
-        final var mateus = castMemberGateway.create(Fixture.CastMembers.mateus());
-
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
         final var expectedLaunchYear = Fixture.year();
@@ -218,10 +233,6 @@ public class VideoGatewayTest {
                 Set.of()
         ));
 
-        final var prime = categoryGateway.create(Fixture.Categories.prime());
-        final var drama = genreGateway.create(Fixture.Genres.drama());
-        final var mateus = castMemberGateway.create(Fixture.CastMembers.mateus());
-
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
         final var expectedLaunchYear = Fixture.year();
@@ -337,10 +348,6 @@ public class VideoGatewayTest {
 
     @Test
     public void givenValidVideoId_whenCallsFindById_thenReturnVideo() {
-        final var prime = categoryGateway.create(Fixture.Categories.prime());
-        final var drama = genreGateway.create(Fixture.Genres.drama());
-        final var mateus = castMemberGateway.create(Fixture.CastMembers.mateus());
-
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
         final var expectedLaunchYear = Fixture.year();
@@ -420,4 +427,374 @@ public class VideoGatewayTest {
 
         Assertions.assertTrue(actualVideo.isEmpty());
     }
+
+    @Test
+    public void givenNoParams_whenCallsFindAll_thenReturnAll() {
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 4;
+
+        final var aQuery =
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(),
+                        Set.of(),
+                        Set.of()
+                );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+    }
+
+    @Test
+    public void givenEmptyVideos_whenCallsFindAll_thenReturnEmptyList() {
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 0;
+
+        final var aQuery =
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(),
+                        Set.of(),
+                        Set.of()
+                );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+    }
+
+    @Test
+    public void givenValidCategory_whenCallsFindAll_thenReturnFilteredList() {
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery =
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(netflix.getId()),
+                        Set.of(),
+                        Set.of()
+                );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+        Assertions.assertEquals("Title 3", actualPage.items().get(0).title());
+        Assertions.assertEquals("Title 4", actualPage.items().get(1).title());
+    }
+
+    @Test
+    public void givenValidGenre_whenCallsFindAll_thenReturnFilteredList() {
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery =
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(),
+                        Set.of(drama.getId()),
+                        Set.of()
+                );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+        Assertions.assertEquals("Title 1", actualPage.items().get(0).title());
+        Assertions.assertEquals("Title 3", actualPage.items().get(1).title());
+    }
+
+    @Test
+    public void givenValidCastMember_whenCallsFindAll_thenReturnFilteredList() {
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 2;
+
+        final var aQuery =
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(),
+                        Set.of(),
+                        Set.of(mateus.getId())
+                );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+        Assertions.assertEquals("Title 1", actualPage.items().get(0).title());
+        Assertions.assertEquals("Title 3", actualPage.items().get(1).title());
+    }
+
+    @Test
+    public void givenAllValidParams_whenCallsFindAll_thenReturnFilteredList() {
+        mockVideos();
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTerms = "4";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+        final var expectedTotal = 1;
+
+        final var aQuery =
+                new VideoSearchQuery(
+                        expectedPage,
+                        expectedPerPage,
+                        expectedTerms,
+                        expectedSort,
+                        expectedDirection,
+                        Set.of(netflix.getId()),
+                        Set.of(romance.getId()),
+                        Set.of(lucas.getId())
+                );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedTotal, actualPage.items().size());
+        Assertions.assertEquals("Title 4", actualPage.items().get(0).title());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1,0,10,1,1,Title 1",
+            "tle 2,0,10,1,1,Title 2",
+            "title 3,0,10,1,1,Title 3",
+            "le 4,0,10,1,1,Title 4",
+    })
+    public void givenValidTerms_whenCallsFindAll_thenReturnFilteredVideos(
+            final String expectedTerms,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedVideoTitle
+    ) {
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+
+        mockVideos();
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedItemsCount, actualPage.items().size());
+        Assertions.assertEquals(expectedVideoTitle, actualPage.items().get(0).title());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "title,asc,0,10,4,4,Title 1",
+            "title,desc,0,10,4,4,Title 4",
+            "createdAt,asc,0,10,4,4,Title 1",
+            "createdAt,desc,0,10,4,4,Title 4"
+    })
+    public void givenValidSortAndDirection_whenCallsFindAll_thenReturnOrderedVideos(
+            final String expectedSort,
+            final String expectedDirection,
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedVideoTitle
+    ) {
+        final var expectedTerms = "";
+
+        mockVideos();
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedItemsCount, actualPage.items().size());
+        Assertions.assertEquals(expectedVideoTitle, actualPage.items().get(0).title());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,2,2,4,Title 1;Title 2",
+            "1,2,2,4,Title 3;Title 4",
+    })
+    public void givenValidPaging_whenCallsFindAll_thenReturnPagedVideos(
+            final int expectedPage,
+            final int expectedPerPage,
+            final int expectedItemsCount,
+            final long expectedTotal,
+            final String expectedVideos
+    ) {
+        final var expectedTerms = "";
+        final var expectedSort = "title";
+        final var expectedDirection = "asc";
+
+        mockVideos();
+
+        final var aQuery = new VideoSearchQuery(
+                expectedPage,
+                expectedPerPage,
+                expectedTerms,
+                expectedSort,
+                expectedDirection,
+                Set.of(),
+                Set.of(),
+                Set.of()
+        );
+
+        final var actualPage = videoGateway.findAll(aQuery);
+
+        Assertions.assertEquals(expectedPage, actualPage.currentPage());
+        Assertions.assertEquals(expectedPerPage, actualPage.perPage());
+        Assertions.assertEquals(expectedTotal, actualPage.total());
+        Assertions.assertEquals(expectedItemsCount, actualPage.items().size());
+
+        int index = 0;
+        for (final var expectedName : expectedVideos.split(";")) {
+            Assertions.assertEquals(expectedName, actualPage.items().get(index).title());
+            index += 1;
+        }
+    }
+
+    private void mockVideos() {
+        videoGateway.create(Video.newVideo(
+                "Title 1",
+                Fixture.Videos.description(),
+                Fixture.year(),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(prime.getId()),
+                Set.of(drama.getId()),
+                Set.of(mateus.getId(), lucas.getId())
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "Title 2",
+                Fixture.Videos.description(),
+                Fixture.year(),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(),
+                Set.of(),
+                Set.of()
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "Title 3",
+                Fixture.Videos.description(),
+                Fixture.year(),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(netflix.getId()),
+                Set.of(drama.getId()),
+                Set.of(mateus.getId())
+        ));
+
+        videoGateway.create(Video.newVideo(
+                "Title 4",
+                Fixture.Videos.description(),
+                Fixture.year(),
+                Fixture.duration(),
+                Fixture.Videos.rating(),
+                Fixture.bool(),
+                Fixture.bool(),
+                Set.of(netflix.getId()),
+                Set.of(romance.getId()),
+                Set.of(lucas.getId())
+        ));
+    }
+
+
 }
