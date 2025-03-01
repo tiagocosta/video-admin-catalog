@@ -436,7 +436,7 @@ public class GenreMySQLGatewayTest {
             "createdAt,asc,0,10,5,5,Drama",
             "createdAt,desc,0,10,5,5,Terror"
     })
-    public void givenValidSortAndDirection_whenCallsFindAll_thenReturnFilteredGenres(
+    public void givenValidSortAndDirection_whenCallsFindAll_thenReturnOrderedGenres(
             final String expectedSort,
             final String expectedDirection,
             final int expectedPage,
@@ -467,7 +467,7 @@ public class GenreMySQLGatewayTest {
             "1,2,2,5,Drama;Scientific Fiction",
             "2,2,1,5,Terror"
     })
-    public void givenValidSortAndDirection_whenCallsFindAll_thenReturnFilteredGenres(
+    public void givenValidPaging_whenCallsFindAll_thenReturnPagedGenres(
             final int expectedPage,
             final int expectedPerPage,
             final int expectedItemsCount,
