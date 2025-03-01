@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Component
 public class GenreMySQLGateway implements GenreGateway {
@@ -73,8 +74,13 @@ public class GenreMySQLGateway implements GenreGateway {
     }
 
     @Override
-    public List<GenreID> existsByIds(Iterable<GenreID> ids) {
-        throw new UnsupportedOperationException();
+    public List<GenreID> existsByIds(Iterable<GenreID> genreIDs) {
+        final var ids = StreamSupport.stream(genreIDs.spliterator(), false)
+                .map(GenreID::getValue)
+                .toList();
+        return this.genreRepository.existsByIds(ids).stream()
+                .map(GenreID::from)
+                .toList();
     }
 
     private Genre save(Genre aGenre) {

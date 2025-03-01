@@ -314,6 +314,33 @@ public class GenreMySQLGatewayTest {
     }
 
     @Test
+    public void givenOnePersistedGenre_whenCallExistsByIdsWithTwoGenres_thenReturnOnlyThePersistedOne() {
+
+        final var expectedItemsCount= 1;
+
+        final var aGenre
+                = Genre.newGenre("Drama", true);
+
+        final var expectedId = aGenre.getId();
+
+        genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
+
+        Assertions.assertTrue(aGenre.isActive());
+        Assertions.assertNull(aGenre.getDeletedAt());
+
+        final var actualGenreList = genreGateway.existsByIds(
+                List.of(
+                        GenreID.from("123"),
+                        expectedId
+                )
+        );
+
+        Assertions.assertEquals(expectedItemsCount, actualGenreList.size());
+        Assertions.assertEquals(expectedId.getValue(), actualGenreList.get(0).getValue());
+
+    }
+
+    @Test
     public void givenPrePersistedGenre_whenCallsDeleteById_thenDeleteGenre() {
         final var aGenre = Genre.newGenre("Drama", true);
 
