@@ -325,9 +325,6 @@ public class GenreMySQLGatewayTest {
 
         genreRepository.saveAndFlush(GenreJpaEntity.from(aGenre));
 
-        Assertions.assertTrue(aGenre.isActive());
-        Assertions.assertNull(aGenre.getDeletedAt());
-
         final var actualGenreList = genreGateway.existsByIds(
                 List.of(
                         GenreID.from("123"),
@@ -337,7 +334,6 @@ public class GenreMySQLGatewayTest {
 
         Assertions.assertEquals(expectedItemsCount, actualGenreList.size());
         Assertions.assertEquals(expectedId.getValue(), actualGenreList.get(0).getValue());
-
     }
 
     @Test
