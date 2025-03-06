@@ -1,6 +1,6 @@
 package com.tcs.admin.catalog.infrastructure.services;
 
-import com.tcs.admin.catalog.domain.video.Resource;
+import com.tcs.admin.catalog.domain.resource.Resource;
 
 import java.util.Collection;
 import java.util.List;

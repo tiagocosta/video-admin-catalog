@@ -4,6 +4,7 @@ import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.genre.Genre;
+import com.tcs.admin.catalog.domain.resource.Resource;
 import com.tcs.admin.catalog.domain.utils.IdUtils;
 import com.tcs.admin.catalog.domain.video.*;
 import net.datafaker.Faker;
@@ -182,15 +183,16 @@ public final class Fixture {
             return FAKER.options().option(Rating.values());
         }
 
-        public static Resource resource(final Resource.Type type) {
+        public static Resource resource(final MediaType type) {
             final String contentType = switch (type) {
                 case VIDEO, TRAILER -> "vide/mp4";
                 default -> "image/jpg";
             };
 
-            final byte[] content = "Content".getBytes();
+            final var checksum = IdUtils.uuid();
+            final var content = "Content".getBytes();
 
-            return Resource.with(content, contentType, type.name().toLowerCase(), type);
+            return Resource.with(checksum, content, contentType, type.name().toLowerCase());
         }
     }
 }

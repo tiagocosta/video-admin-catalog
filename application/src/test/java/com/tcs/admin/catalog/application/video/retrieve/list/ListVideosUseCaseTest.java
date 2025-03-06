@@ -3,6 +3,7 @@ package com.tcs.admin.catalog.application.video.retrieve.list;
 import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
+import com.tcs.admin.catalog.domain.resource.Resource;
 import com.tcs.admin.catalog.domain.utils.IdUtils;
 import com.tcs.admin.catalog.domain.video.*;
 import org.junit.jupiter.api.Assertions;
@@ -151,7 +152,7 @@ public class ListVideosUseCaseTest extends UseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
     }
 
-    private AudioVideoMedia audioVideo(final Resource.Type type) {
+    private AudioVideoMedia audioVideo(final MediaType type) {
         final var id = IdUtils.uuid();
         return AudioVideoMedia.with(
                 id,
@@ -163,7 +164,7 @@ public class ListVideosUseCaseTest extends UseCaseTest {
         );
     }
 
-    private ImageMedia image(final Resource.Type type) {
+    private ImageMedia image(final MediaType type) {
         final var checksum = IdUtils.uuid();
         return ImageMedia.with(
                 checksum,

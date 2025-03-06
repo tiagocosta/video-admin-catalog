@@ -1,6 +1,6 @@
 package com.tcs.admin.catalog.application.video.create;
 
-import com.tcs.admin.catalog.domain.video.Resource;
+import com.tcs.admin.catalog.domain.resource.Resource;
 
 import java.util.Optional;
 import java.util.Set;

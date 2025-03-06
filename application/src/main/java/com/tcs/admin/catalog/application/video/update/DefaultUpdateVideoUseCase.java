@@ -25,6 +25,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.tcs.admin.catalog.domain.video.MediaType.*;
+
 public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
     private final VideoGateway videoGateway;
@@ -91,23 +93,23 @@ public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
         try {
             final var aVideoMedia = aCommand.getVideo()
-                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, it))
+                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, VideoResource.with(it, VIDEO)))
                     .orElse(null);
 
             final var aTrailerMedia = aCommand.getTrailer()
-                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, it))
+                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, VideoResource.with(it, TRAILER)))
                     .orElse(null);
 
             final var aBannerMedia = aCommand.getBanner()
-                    .map(it -> mediaResourceGateway.storeImage(anId, it))
+                    .map(it -> mediaResourceGateway.storeImage(anId, VideoResource.with(it, BANNER)))
                     .orElse(null);
 
             final var aThumbMedia = aCommand.getThumbnail()
-                    .map(it -> mediaResourceGateway.storeImage(anId, it))
+                    .map(it -> mediaResourceGateway.storeImage(anId, VideoResource.with(it, THUMBNAIL)))
                     .orElse(null);
 
             final var aThumbHalfMedia = aCommand.getThumbnailHalf()
-                    .map(it -> mediaResourceGateway.storeImage(anId, it))
+                    .map(it -> mediaResourceGateway.storeImage(anId, VideoResource.with(it, THUMBNAIL_HALF)))
                     .orElse(null);
 
             return videoGateway.update(
