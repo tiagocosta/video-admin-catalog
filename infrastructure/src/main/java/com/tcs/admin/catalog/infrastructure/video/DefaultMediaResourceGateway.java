@@ -6,6 +6,8 @@ import com.tcs.admin.catalog.infrastructure.configuration.properties.storage.Sto
 import com.tcs.admin.catalog.infrastructure.services.StorageService;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 
 @Component
 public class DefaultMediaResourceGateway implements MediaResourceGateway {
@@ -20,6 +22,11 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
         this.filenamePattern = props.getFilenamePattern();
         this.locationPattern = props.getLocationPattern();
         this.storageService = storageService;
+    }
+
+    @Override
+    public Optional<Resource> getResource(VideoID anId, MediaType aType) {
+        return Optional.empty();
     }
 
     @Override
