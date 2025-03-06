@@ -27,6 +27,57 @@ class DefaultMediaResourceGatewayTest {
     }
 
     @Test
+    public void givenValidVideoId_whenCallsGetResource_thenReturnIt() {
+        final var video = VideoID.unique();
+        final var expectedType = MediaType.VIDEO;
+        final var expectedResource = Fixture.Videos.resource(expectedType);
+
+        storageService().store(
+                "videoId-%s/type-%s".formatted(video.getValue(), expectedType),
+                expectedResource
+        );
+        storageService().store(
+                "videoId-%s/type-%s".formatted(video.getValue(), MediaType.TRAILER.name()),
+                Fixture.Videos.resource(Fixture.mediaType())
+        );
+        storageService().store(
+                "videoId-%s/type-%s".formatted(video.getValue(), MediaType.BANNER.name()),
+                Fixture.Videos.resource(Fixture.mediaType())
+        );
+
+        Assertions.assertEquals(3, storageService().storage().size());
+
+        final var actualResult = this.mediaResourceGateway.getResource(video, expectedType).get();
+
+        Assertions.assertEquals(expectedResource, actualResult);
+    }
+
+    @Test
+    public void givenInvalidType_whenCallsGetResource_thenReturnEmpty() {
+        final var video = VideoID.unique();
+        final var expectedType = MediaType.THUMBNAIL;
+
+        storageService().store(
+                "videoId-%s/type-%s".formatted(video.getValue(), MediaType.VIDEO.name()),
+                Fixture.Videos.resource(Fixture.mediaType())
+        );
+        storageService().store(
+                "videoId-%s/type-%s".formatted(video.getValue(), MediaType.TRAILER.name()),
+                Fixture.Videos.resource(Fixture.mediaType())
+        );
+        storageService().store(
+                "videoId-%s/type-%s".formatted(video.getValue(), MediaType.BANNER.name()),
+                Fixture.Videos.resource(Fixture.mediaType())
+        );
+
+        Assertions.assertEquals(3, storageService().storage().size());
+
+        final var actualResult = this.mediaResourceGateway.getResource(video, expectedType);
+
+        Assertions.assertTrue(actualResult.isEmpty());
+    }
+
+    @Test
     public void givenValidResource_whenCallsStoreAudioVideo_thenStoreIt() {
         final var expectedVideoId = VideoID.unique();
         final var expectedType = MediaType.VIDEO;
