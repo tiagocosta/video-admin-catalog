@@ -26,12 +26,12 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
 
     @Override
     public Optional<Resource> getResource(VideoID anId, MediaType aType) {
-        return Optional.empty();
+        return this.storageService.get(filepath(anId, aType));
     }
 
     @Override
     public AudioVideoMedia storeAudioVideo(final VideoID anId, final VideoResource aVideoResource) {
-        final var filepath = filepath(anId, aVideoResource);
+        final var filepath = filepath(anId, aVideoResource.type());
         final var aResource = aVideoResource.resource();
         store(filepath, aResource);
         return AudioVideoMedia.with(aResource.checksum(), aResource.name(), filepath);
@@ -39,7 +39,7 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
 
     @Override
     public ImageMedia storeImage(final VideoID anId, final VideoResource aVideoResource) {
-        final var filepath = filepath(anId, aVideoResource);
+        final var filepath = filepath(anId, aVideoResource.type());
         final var aResource = aVideoResource.resource();
         store(filepath, aResource);
         return ImageMedia.with(aResource.checksum(), aResource.name(), filepath);
@@ -59,10 +59,10 @@ public class DefaultMediaResourceGateway implements MediaResourceGateway {
         return locationPattern.replace("{videoId}", anId.getValue());
     }
 
-    private String filepath(final VideoID anId, final VideoResource aResource) {
+    private String filepath(final VideoID anId, final MediaType aType) {
         return folder(anId)
                 .concat("/")
-                .concat(filename(aResource.type()));
+                .concat(filename(aType));
     }
 
     private void store(final String filepath, final Resource aResource) {
