@@ -66,6 +66,10 @@ public final class Fixture {
         return FAKER.options().option(MediaStatus.values());
     }
 
+    public static MediaType mediaType() {
+        return FAKER.options().option(MediaType.values());
+    }
+
     public static Video video() {
         return Video.newVideo(
                 Fixture.title(),
