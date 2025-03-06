@@ -2,12 +2,10 @@ package com.tcs.admin.catalog.infrastructure.services.local;
 
 import com.tcs.admin.catalog.domain.resource.Resource;
 import com.tcs.admin.catalog.infrastructure.services.StorageService;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
 public class InMemoryStorageService implements StorageService {
 
     private Map<String, Resource> storage;
