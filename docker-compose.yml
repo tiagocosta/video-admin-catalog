@@ -14,5 +14,19 @@ services:
     networks:
       - videos_adm_network
 
+  rabbitmq:
+    container_name: videos_adm_rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SWQOKODSQALRPCLNMEQG
+      - RABBITMQ_DEFAULT_USER=videos_adm
+      - RABBITMQ_DEFAULT_PASS=123456
+      - RABBITMQ_DEFAULT_VHOST=/
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - videos_adm_network
+
 networks:
   videos_adm_network:
