@@ -1,5 +1,6 @@
 package com.tcs.admin.catalog.application.video.delete;
 
+import com.tcs.admin.catalog.domain.video.MediaResourceGateway;
 import com.tcs.admin.catalog.domain.video.VideoGateway;
 import com.tcs.admin.catalog.domain.video.VideoID;
 import org.junit.jupiter.api.Assertions;
@@ -20,12 +21,15 @@ public class DeleteVideoUseCaseTest {
     @Mock
     private VideoGateway videoGateway;
 
+    @Mock
+    private MediaResourceGateway mediaResourceGateway;
+
     @InjectMocks
     private DefaultDeleteVideoUseCase useCase;
 
     @BeforeEach
     void cleanUp() {
-        Mockito.reset(videoGateway);
+        Mockito.reset(videoGateway, mediaResourceGateway);
     }
 
     @Test
@@ -33,11 +37,15 @@ public class DeleteVideoUseCaseTest {
         final var expectedId = VideoID.unique();
 
         doNothing()
-                .when(videoGateway).deleteById(eq(expectedId));
+                .when(videoGateway).deleteById(any());
+
+        doNothing()
+                .when(mediaResourceGateway).clearResources(any());
 
         Assertions.assertDoesNotThrow(() -> this.useCase.execute(expectedId.getValue()));
 
         verify(videoGateway).deleteById(eq(expectedId));
+        verify(mediaResourceGateway).clearResources(eq(expectedId));
     }
 
     @Test
