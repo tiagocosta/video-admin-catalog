@@ -175,6 +175,24 @@ public final class Fixture {
 
     public static final class Videos {
 
+        private static final Video FAST_AND_FURIOUS =
+                Video.newVideo(
+                        "Fast and Furious",
+                        "Fast and Furious description",
+                        Year.of(2025),
+                        Fixture.duration(),
+                        Rating.AGE_12,
+                        Fixture.bool(),
+                        Fixture.bool(),
+                        Set.of(Fixture.Categories.prime().getId()),
+                        Set.of(Fixture.Genres.drama().getId()),
+                        Set.of(Fixture.CastMembers.tiago().getId())
+                );
+
+        public static Video fastAndFurious() {
+            return Video.with(FAST_AND_FURIOUS);
+        }
+
         public static String description() {
             return FAKER.options().option(
                     "Video Description 1",
@@ -197,6 +215,24 @@ public final class Fixture {
             final var content = "Content".getBytes();
 
             return Resource.with(checksum, content, contentType, type.name().toLowerCase());
+        }
+
+        public static AudioVideoMedia audioVideo(final MediaType type) {
+            final var checksum = Fixture.checksum();
+            return AudioVideoMedia.with(
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/videos/" + checksum
+            );
+        }
+
+        public static ImageMedia image(final MediaType type) {
+            final var checksum = Fixture.checksum();
+            return ImageMedia.with(
+                    checksum,
+                    type.name().toLowerCase(),
+                    "/images/" + checksum
+            );
         }
     }
 }
