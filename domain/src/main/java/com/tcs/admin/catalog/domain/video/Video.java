@@ -320,4 +320,28 @@ public class Video extends AggregateRoot<VideoID> {
     private void setCastMembers(final Set<CastMemberID> castMembers) {
         this.castMembers = castMembers != null ? new HashSet<>(castMembers) : Collections.emptySet();
     }
+
+    public Video processing(final MediaType aType) {
+        if (MediaType.VIDEO == aType) {
+            getVideo()
+                    .ifPresent(media -> setVideo(media.processing()));
+        } else if (MediaType.TRAILER == aType) {
+            getTrailer()
+                    .ifPresent(media -> setTrailer(media.processing()));
+        }
+
+        return this;
+    }
+
+    public Video completed(final MediaType aType, final String encodedPath) {
+        if (MediaType.VIDEO == aType) {
+            getVideo()
+                    .ifPresent(media -> setVideo(media.completed(encodedPath)));
+        } else if (MediaType.TRAILER == aType) {
+            getTrailer()
+                    .ifPresent(media -> setTrailer(media.completed(encodedPath)));
+        }
+
+        return this;
+    }
 }
