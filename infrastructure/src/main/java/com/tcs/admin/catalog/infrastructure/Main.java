@@ -23,4 +23,7 @@ public class Main {
 //
 //        };
 //    }
+
+//    @RabbitListener(queues = "video.encoded.queue")
+//    void dummyListener() {}
 }
