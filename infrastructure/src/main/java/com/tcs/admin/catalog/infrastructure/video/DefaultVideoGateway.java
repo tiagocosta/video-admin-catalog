@@ -3,6 +3,8 @@ package com.tcs.admin.catalog.infrastructure.video;
 import com.tcs.admin.catalog.domain.Identifier;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.domain.video.*;
+import com.tcs.admin.catalog.infrastructure.configuration.annotations.VideoCreatedQueue;
+import com.tcs.admin.catalog.infrastructure.services.EventService;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoJpaEntity;
 import com.tcs.admin.catalog.infrastructure.video.persistence.VideoRepository;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +25,14 @@ public class DefaultVideoGateway implements VideoGateway {
 
     private final VideoRepository videoRepository;
 
-    public DefaultVideoGateway(final VideoRepository videoRepository) {
+    private final EventService eventService;
+
+    public DefaultVideoGateway(
+            final VideoRepository videoRepository,
+            @VideoCreatedQueue final EventService eventService
+    ) {
         this.videoRepository = Objects.requireNonNull(videoRepository);
+        this.eventService = Objects.requireNonNull(eventService);
     }
 
     @Override
@@ -79,7 +87,11 @@ public class DefaultVideoGateway implements VideoGateway {
     }
 
     private Video save(final Video aVideo) {
-        return this.videoRepository.save(VideoJpaEntity.from(aVideo))
+        final var result  = this.videoRepository.save(VideoJpaEntity.from(aVideo))
                 .toDomain();
+
+        aVideo.publishDomainEvent(this.eventService::send);
+
+        return result;
     }
 }
