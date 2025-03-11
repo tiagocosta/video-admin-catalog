@@ -44,7 +44,7 @@ public class UpdateMediaStatusUseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.fastAndFurious()
-                .setVideo(expectedMedia);
+                .updateVideoMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -95,7 +95,7 @@ public class UpdateMediaStatusUseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.fastAndFurious()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -146,7 +146,7 @@ public class UpdateMediaStatusUseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.fastAndFurious()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
@@ -194,7 +194,7 @@ public class UpdateMediaStatusUseCaseTest {
         final var expectedMedia = Fixture.Videos.audioVideo(expectedType);
 
         final var aVideo = Fixture.Videos.fastAndFurious()
-                .setTrailer(expectedMedia);
+                .updateTrailerMedia(expectedMedia);
 
         final var expectedId = aVideo.getId();
 
