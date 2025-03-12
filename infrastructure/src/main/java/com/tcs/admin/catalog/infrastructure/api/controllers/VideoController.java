@@ -5,6 +5,7 @@ import com.tcs.admin.catalog.application.video.create.CreateVideoUseCase;
 import com.tcs.admin.catalog.domain.resource.Resource;
 import com.tcs.admin.catalog.infrastructure.api.VideoAPI;
 import com.tcs.admin.catalog.infrastructure.utils.HashUtils;
+import com.tcs.admin.catalog.infrastructure.video.models.CreateVideoRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,6 +57,26 @@ public class VideoController implements VideoAPI {
                 resourceOf(bannerFile),
                 resourceOf(thumbFile),
                 resourceOf(thumbHalfFile)
+        );
+
+        final var output = this.createVideoUseCase.execute(aCommand);
+
+        return ResponseEntity.created(URI.create("/videos/" + output.id())).body(output);
+    }
+
+    @Override
+    public ResponseEntity<?> createDraft(final CreateVideoRequest payload) {
+        final var aCommand = CreateVideoCommand.with(
+                payload.title(),
+                payload.description(),
+                payload.yearLaunched(),
+                payload.duration(),
+                payload.opened(),
+                payload.published(),
+                payload.rating(),
+                payload.categories(),
+                payload.genres(),
+                payload.castMembers()
         );
 
         final var output = this.createVideoUseCase.execute(aCommand);
