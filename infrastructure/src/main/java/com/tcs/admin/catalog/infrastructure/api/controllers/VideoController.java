@@ -2,10 +2,13 @@ package com.tcs.admin.catalog.infrastructure.api.controllers;
 
 import com.tcs.admin.catalog.application.video.create.CreateVideoCommand;
 import com.tcs.admin.catalog.application.video.create.CreateVideoUseCase;
+import com.tcs.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.tcs.admin.catalog.domain.resource.Resource;
 import com.tcs.admin.catalog.infrastructure.api.VideoAPI;
 import com.tcs.admin.catalog.infrastructure.utils.HashUtils;
 import com.tcs.admin.catalog.infrastructure.video.models.CreateVideoRequest;
+import com.tcs.admin.catalog.infrastructure.video.models.VideoResponse;
+import com.tcs.admin.catalog.infrastructure.video.presenters.VideoApiPresenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,9 +21,14 @@ import java.util.Set;
 public class VideoController implements VideoAPI {
 
     private final CreateVideoUseCase createVideoUseCase;
+    private final GetVideoByIdUseCase getVideoByIdUseCase;
 
-    public VideoController(final CreateVideoUseCase createVideoUseCase) {
+    public VideoController(
+            final CreateVideoUseCase createVideoUseCase,
+            final GetVideoByIdUseCase getVideoByIdUseCase
+    ) {
         this.createVideoUseCase = Objects.requireNonNull(createVideoUseCase);
+        this.getVideoByIdUseCase = Objects.requireNonNull(getVideoByIdUseCase);
     }
 
     @Override
@@ -82,6 +90,11 @@ public class VideoController implements VideoAPI {
         final var output = this.createVideoUseCase.execute(aCommand);
 
         return ResponseEntity.created(URI.create("/videos/" + output.id())).body(output);
+    }
+
+    @Override
+    public VideoResponse getById(String id) {
+        return VideoApiPresenter.present(this.getVideoByIdUseCase.execute(id));
     }
 
     private Resource resourceOf(final MultipartFile part) {
