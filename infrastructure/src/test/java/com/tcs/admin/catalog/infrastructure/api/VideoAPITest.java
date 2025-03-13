@@ -7,13 +7,19 @@ import com.tcs.admin.catalog.application.video.create.CreateVideoOutput;
 import com.tcs.admin.catalog.application.video.create.CreateVideoUseCase;
 import com.tcs.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.tcs.admin.catalog.application.video.retrieve.get.VideoOutput;
+import com.tcs.admin.catalog.application.video.update.UpdateVideoCommand;
+import com.tcs.admin.catalog.application.video.update.UpdateVideoOutput;
+import com.tcs.admin.catalog.application.video.update.UpdateVideoUseCase;
 import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.category.CategoryID;
+import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import com.tcs.admin.catalog.domain.genre.GenreID;
+import com.tcs.admin.catalog.domain.validation.Error;
 import com.tcs.admin.catalog.domain.video.Video;
 import com.tcs.admin.catalog.domain.video.VideoID;
 import com.tcs.admin.catalog.infrastructure.video.models.CreateVideoRequest;
+import com.tcs.admin.catalog.infrastructure.video.models.UpdateVideoRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -23,12 +29,12 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 import static com.tcs.admin.catalog.domain.utils.CollectionUtils.mapTo;
 import static com.tcs.admin.catalog.domain.video.MediaType.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,6 +55,9 @@ class VideoAPITest {
 
     @MockitoBean
     private GetVideoByIdUseCase getVideoByIdUseCase;
+
+    @MockitoBean
+    private UpdateVideoUseCase updateVideoUseCase;
 
     @Test
     public void givenValidCommand_whenCallsCreateFull_thenReturnIt() throws Exception {
@@ -284,8 +293,128 @@ class VideoAPITest {
                 .andExpect(jsonPath("$.trailer.location", equalTo(expectedTrailer.rawLocation())))
                 .andExpect(jsonPath("$.trailer.encoded_location", equalTo(expectedTrailer.encodedLocation())))
                 .andExpect(jsonPath("$.trailer.status", equalTo(expectedTrailer.status().name())))
-                .andExpect(jsonPath("$.categories_id", equalTo(new ArrayList(expectedCategories))))
-                .andExpect(jsonPath("$.genres_id", equalTo(new ArrayList(expectedGenres))))
-                .andExpect(jsonPath("$.cast_members_id", equalTo(new ArrayList(expectedCastMembers))));
+                .andExpect(jsonPath("$.categories_id", equalTo(expectedCategories.stream().toList())))
+                .andExpect(jsonPath("$.genres_id", equalTo(expectedGenres.stream().toList())))
+                .andExpect(jsonPath("$.cast_members_id", equalTo(expectedCastMembers.stream().toList())));
+    }
+
+    @Test
+    public void givenValidCommand_whenCallsUpdate_thenReturnVideoId() throws Exception {
+        final var mateus = Fixture.CastMembers.mateus();
+        final var drama = Fixture.Genres.drama();
+        final var prime = Fixture.Categories.prime();
+
+        final var expectedId = VideoID.unique();
+        final var expectedTitle = Fixture.title();
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Fixture.year();
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(prime.getId().getValue());
+        final var expectedGenres = Set.of(drama.getId().getValue());
+        final var expectedCastMembers = Set.of(mateus.getId().getValue());
+
+        final var aCommand = new UpdateVideoRequest(
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear.getValue(),
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                expectedCategories,
+                expectedGenres,
+                expectedCastMembers
+        );
+
+        when(updateVideoUseCase.execute(any()))
+                .thenReturn(new UpdateVideoOutput(expectedId.getValue()));
+
+        final var aRequest = put("/videos/" + expectedId.getValue())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(aCommand));
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isOk())
+                .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdateVideoCommand.class);
+
+        verify(updateVideoUseCase).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(expectedTitle, actualCmd.title());
+        Assertions.assertEquals(expectedDescription, actualCmd.description());
+        Assertions.assertEquals(expectedLaunchYear.getValue(), actualCmd.launchedAt());
+        Assertions.assertEquals(expectedDuration, actualCmd.duration());
+        Assertions.assertEquals(expectedOpened, actualCmd.opened());
+        Assertions.assertEquals(expectedPublished, actualCmd.published());
+        Assertions.assertEquals(expectedRating.getName(), actualCmd.rating());
+        Assertions.assertEquals(expectedCategories, actualCmd.categories());
+        Assertions.assertEquals(expectedGenres, actualCmd.genres());
+        Assertions.assertEquals(expectedCastMembers, actualCmd.castMembers());
+        Assertions.assertTrue(actualCmd.getVideo().isEmpty());
+        Assertions.assertTrue(actualCmd.getTrailer().isEmpty());
+        Assertions.assertTrue(actualCmd.getBanner().isEmpty());
+        Assertions.assertTrue(actualCmd.getThumbnail().isEmpty());
+        Assertions.assertTrue(actualCmd.getThumbnailHalf().isEmpty());
+    }
+
+    @Test
+    public void givenInvalidCommand_whenCallsUpdate_thenReturnNotification() throws Exception {
+        final var mateus = Fixture.CastMembers.mateus();
+        final var drama = Fixture.Genres.drama();
+        final var prime = Fixture.Categories.prime();
+
+        final var expectedId = VideoID.unique();
+        final var expectedTitle = "";
+        final var expectedDescription = Fixture.Videos.description();
+        final var expectedLaunchYear = Fixture.year();
+        final var expectedDuration = Fixture.duration();
+        final var expectedOpened = Fixture.bool();
+        final var expectedPublished = Fixture.bool();
+        final var expectedRating = Fixture.Videos.rating();
+        final var expectedCategories = Set.of(prime.getId().getValue());
+        final var expectedGenres = Set.of(drama.getId().getValue());
+        final var expectedCastMembers = Set.of(mateus.getId().getValue());
+
+        final var expectedErrorCount = 1;
+        final var expectedErrorMessage = "'title' should not be empty";
+
+        final var aCommand = new UpdateVideoRequest(
+                expectedTitle,
+                expectedDescription,
+                expectedLaunchYear.getValue(),
+                expectedDuration,
+                expectedOpened,
+                expectedPublished,
+                expectedRating.getName(),
+                expectedCategories,
+                expectedGenres,
+                expectedCastMembers
+        );
+
+        when(updateVideoUseCase.execute(any()))
+                .thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
+
+        final var aRequest = put("/videos/" + expectedId.getValue())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(aCommand));
+
+        this.mvc.perform(aRequest)
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)))
+                .andExpect(jsonPath("$.errors", hasSize(expectedErrorCount)))
+                .andExpect(jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        verify(updateVideoUseCase).execute(any());
     }
 }

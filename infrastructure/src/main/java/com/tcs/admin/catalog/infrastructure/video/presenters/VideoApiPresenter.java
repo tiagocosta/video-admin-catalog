@@ -1,10 +1,12 @@
 package com.tcs.admin.catalog.infrastructure.video.presenters;
 
 import com.tcs.admin.catalog.application.video.retrieve.get.VideoOutput;
+import com.tcs.admin.catalog.application.video.update.UpdateVideoOutput;
 import com.tcs.admin.catalog.domain.video.AudioVideoMedia;
 import com.tcs.admin.catalog.domain.video.ImageMedia;
 import com.tcs.admin.catalog.infrastructure.video.models.AudioVideoMediaResponse;
 import com.tcs.admin.catalog.infrastructure.video.models.ImageMediaResponse;
+import com.tcs.admin.catalog.infrastructure.video.models.UpdateVideoResponse;
 import com.tcs.admin.catalog.infrastructure.video.models.VideoResponse;
 
 public interface VideoApiPresenter {
@@ -52,5 +54,9 @@ public interface VideoApiPresenter {
                 media.name(),
                 media.location()
         );
+    }
+
+    static UpdateVideoResponse present(final UpdateVideoOutput output) {
+        return new UpdateVideoResponse(output.id());
     }
 }

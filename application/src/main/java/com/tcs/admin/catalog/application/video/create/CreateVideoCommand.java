@@ -70,7 +70,7 @@ public record CreateVideoCommand(
             final Set<String> genres,
             final Set<String> castMembers
     ) {
-        return new CreateVideoCommand(
+        return with(
                 title,
                 description,
                 launchedAt,
