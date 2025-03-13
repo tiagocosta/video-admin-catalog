@@ -4,8 +4,12 @@ import com.tcs.admin.catalog.application.video.create.CreateVideoUseCase;
 import com.tcs.admin.catalog.application.video.create.DefaultCreateVideoUseCase;
 import com.tcs.admin.catalog.application.video.delete.DefaultDeleteVideoUseCase;
 import com.tcs.admin.catalog.application.video.delete.DeleteVideoUseCase;
+import com.tcs.admin.catalog.application.video.media.get.DefaultGetMediaUseCase;
+import com.tcs.admin.catalog.application.video.media.get.GetMediaUseCase;
 import com.tcs.admin.catalog.application.video.media.update.DefaultUpdateMediaStatusUseCase;
 import com.tcs.admin.catalog.application.video.media.update.UpdateMediaStatusUseCase;
+import com.tcs.admin.catalog.application.video.media.upload.DefaultUploadMediaUseCase;
+import com.tcs.admin.catalog.application.video.media.upload.UploadMediaUseCase;
 import com.tcs.admin.catalog.application.video.retrieve.get.DefaultGetVideoByIdUseCase;
 import com.tcs.admin.catalog.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.tcs.admin.catalog.application.video.retrieve.list.DefaultListVideosUseCase;
@@ -87,5 +91,15 @@ public class VideoUseCaseConfig {
     @Bean
     public UpdateMediaStatusUseCase updateMediaStatusUseCase() {
         return new DefaultUpdateMediaStatusUseCase(videoGateway);
+    }
+
+    @Bean
+    public GetMediaUseCase getMediaUseCase() {
+        return new DefaultGetMediaUseCase(mediaResourceGateway);
+    }
+
+    @Bean
+    public UploadMediaUseCase uploadMediaUseCase() {
+        return new DefaultUploadMediaUseCase(videoGateway, mediaResourceGateway);
     }
 }
