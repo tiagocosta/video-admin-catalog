@@ -1,13 +1,12 @@
 package com.tcs.admin.catalog.infrastructure.video.presenters;
 
 import com.tcs.admin.catalog.application.video.retrieve.get.VideoOutput;
+import com.tcs.admin.catalog.application.video.retrieve.list.VideoListOutput;
 import com.tcs.admin.catalog.application.video.update.UpdateVideoOutput;
+import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.domain.video.AudioVideoMedia;
 import com.tcs.admin.catalog.domain.video.ImageMedia;
-import com.tcs.admin.catalog.infrastructure.video.models.AudioVideoMediaResponse;
-import com.tcs.admin.catalog.infrastructure.video.models.ImageMediaResponse;
-import com.tcs.admin.catalog.infrastructure.video.models.UpdateVideoResponse;
-import com.tcs.admin.catalog.infrastructure.video.models.VideoResponse;
+import com.tcs.admin.catalog.infrastructure.video.models.*;
 
 public interface VideoApiPresenter {
 
@@ -58,5 +57,19 @@ public interface VideoApiPresenter {
 
     static UpdateVideoResponse present(final UpdateVideoOutput output) {
         return new UpdateVideoResponse(output.id());
+    }
+
+    static VideoListResponse present(final VideoListOutput output) {
+        return new VideoListResponse(
+                output.id(),
+                output.title(),
+                output.description(),
+                output.createdAt(),
+                output.updatedAt()
+        );
+    }
+
+    static Pagination<VideoListResponse> present(final Pagination<VideoListOutput> page) {
+        return page.map(VideoApiPresenter::present);
     }
 }

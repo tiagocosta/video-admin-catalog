@@ -1,7 +1,9 @@
 package com.tcs.admin.catalog.infrastructure.api;
 
+import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.infrastructure.video.models.CreateVideoRequest;
 import com.tcs.admin.catalog.infrastructure.video.models.UpdateVideoRequest;
+import com.tcs.admin.catalog.infrastructure.video.models.VideoListResponse;
 import com.tcs.admin.catalog.infrastructure.video.models.VideoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,6 +20,24 @@ import java.util.Set;
 @RequestMapping("/videos")
 @Tag(name = "Video")
 public interface VideoAPI {
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "List all videos paginated")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Videos listed successfully"),
+            @ApiResponse(responseCode = "422", description = "Invalid query param"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+    })
+    Pagination<VideoListResponse> list(
+            @RequestParam(name = "search", required = false, defaultValue = "") final String search,
+            @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
+            @RequestParam(name = "perPage", required = false, defaultValue = "25") final int perPage,
+            @RequestParam(name = "sort", required = false, defaultValue = "title") final String sort,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction,
+            @RequestParam(name = "categories_ids", required = false, defaultValue = "") final Set<String> categories,
+            @RequestParam(name = "genres_ids", required = false, defaultValue = "") final Set<String> genres,
+            @RequestParam(name = "cast_members_ids", required = false, defaultValue = "") final Set<String> castMembers
+            );
 
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
