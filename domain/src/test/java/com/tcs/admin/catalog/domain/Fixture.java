@@ -207,7 +207,7 @@ public final class Fixture {
 
         public static Resource resource(final MediaType type) {
             final String contentType = switch (type) {
-                case VIDEO, TRAILER -> "vide/mp4";
+                case VIDEO, TRAILER -> "video/mp4";
                 default -> "image/jpg";
             };
 
