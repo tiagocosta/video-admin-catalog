@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,4 +87,13 @@ public interface VideoAPI {
             @PathVariable String id,
             @RequestBody UpdateVideoRequest payload
     );
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete a video by it's id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Video deleted"),
+            @ApiResponse(responseCode = "500", description = "Internal server error"),
+    })
+    void deleteById(@PathVariable  String id);
 }
