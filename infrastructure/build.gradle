@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+    id 'java-conventions'
     id 'application'
     id 'org.springframework.boot' version '3.4.2'
     id 'io.spring.dependency-management' version '1.1.7'
@@ -16,15 +16,10 @@ plugins {
 }
 
 group = 'com.tcs.admin.catalog.infrastructure'
-version = '1.0-SNAPSHOT'
 
 bootJar {
     archiveFileName = 'application.jar'
     destinationDirectory.set(file("${rootProject.buildDir}/libs"))
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -67,8 +62,4 @@ flyway {
     url = System.getenv('FLYWAY_DB') ?: 'jdbc:mysql://localhost:3306/videos_adm'
     user = System.getenv('FLYWAY_USER') ?: 'root'
     password = System.getenv('FLYWAY_PASS') ?: '123456'
-}
-
-test {
-    useJUnitPlatform()
 }
