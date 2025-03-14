@@ -1,11 +1,11 @@
 package com.tcs.admin.catalog.application.genre.retrieve.list;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ListGenresUseCaseTest {
+public class ListGenresUseCaseTest extends UseCaseTest {
 
     @Mock
     private GenreGateway genreGateway;
@@ -28,8 +28,8 @@ public class ListGenresUseCaseTest {
     @InjectMocks
     private DefaultListGenresUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(genreGateway);
     }
 

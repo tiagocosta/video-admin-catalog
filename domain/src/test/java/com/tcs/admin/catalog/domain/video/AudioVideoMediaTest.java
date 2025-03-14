@@ -1,10 +1,11 @@
 package com.tcs.admin.catalog.domain.video;
 
+import com.tcs.admin.catalog.domain.UnitTest;
 import com.tcs.admin.catalog.domain.utils.IdUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class AudioVideoMediaTest {
+class AudioVideoMediaTest extends UnitTest {
 
     @Test
     public void givenValidParams_whenCallsNewAudioVideo_thenInstantiateIt() {

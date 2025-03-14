@@ -1,11 +1,11 @@
 package com.tcs.admin.catalog.application.video.media.get;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.video.MediaResourceGateway;
 import com.tcs.admin.catalog.domain.video.VideoID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class GetMediaUseCaseTest {
+public class GetMediaUseCaseTest extends UseCaseTest {
 
     @Mock
     private MediaResourceGateway mediaResourceGateway;
@@ -26,8 +26,8 @@ public class GetMediaUseCaseTest {
     @InjectMocks
     private DefaultGetMediaUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(mediaResourceGateway);
     }
 

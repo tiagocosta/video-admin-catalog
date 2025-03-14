@@ -1,11 +1,11 @@
 package com.tcs.admin.catalog.application.genre.create;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CreateGenreUseCaseTest {
+public class CreateGenreUseCaseTest extends UseCaseTest {
 
     @Mock
     private GenreGateway genreGateway;
@@ -34,8 +34,8 @@ public class CreateGenreUseCaseTest {
     @InjectMocks
     private DefaultCreateGenreUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(genreGateway, categoryGateway);
     }
 
@@ -236,11 +236,5 @@ public class CreateGenreUseCaseTest {
 
         Mockito.verify(categoryGateway, times(1)).existsByIds(any());
         Mockito.verify(genreGateway, times(0)).create(any());
-    }
-
-    private List<String> asString(final List<CategoryID> categories) {
-        return categories.stream()
-                .map(CategoryID::getValue)
-                .toList();
     }
 }

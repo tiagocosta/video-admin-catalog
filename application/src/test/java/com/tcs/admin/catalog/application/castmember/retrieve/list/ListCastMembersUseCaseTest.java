@@ -1,12 +1,12 @@
 package com.tcs.admin.catalog.application.castmember.retrieve.list;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.castmember.CastMember;
 import com.tcs.admin.catalog.domain.castmember.CastMemberGateway;
 import com.tcs.admin.catalog.domain.pagination.Pagination;
 import com.tcs.admin.catalog.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ListCastMembersUseCaseTest {
+public class ListCastMembersUseCaseTest extends UseCaseTest {
 
     @Mock
     private CastMemberGateway castMemberGateway;
@@ -27,8 +27,8 @@ public class ListCastMembersUseCaseTest {
     @InjectMocks
     private DefaultListCastMembersUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(castMemberGateway);
     }
 

@@ -1,12 +1,12 @@
 package com.tcs.admin.catalog.application.genre.retrieve.get;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GetGenreByIdUseCaseTest {
+public class GetGenreByIdUseCaseTest extends UseCaseTest {
 
     @Mock
     private GenreGateway genreGateway;
@@ -29,8 +29,8 @@ public class GetGenreByIdUseCaseTest {
     @InjectMocks
     private DefaultGetGenreByIdUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(genreGateway);
     }
 
@@ -98,11 +98,5 @@ public class GetGenreByIdUseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, actualException.getMessage());
 
         Mockito.verify(genreGateway, times(1)).findById(eq(expectedId));
-    }
-
-    private List<String> asString(final List<CategoryID> categories) {
-        return categories.stream()
-                .map(CategoryID::getValue)
-                .toList();
     }
 }

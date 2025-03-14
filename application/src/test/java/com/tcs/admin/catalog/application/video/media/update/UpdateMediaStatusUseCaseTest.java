@@ -1,12 +1,12 @@
 package com.tcs.admin.catalog.application.video.media.update;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.video.MediaStatus;
 import com.tcs.admin.catalog.domain.video.MediaType;
 import com.tcs.admin.catalog.domain.video.Video;
 import com.tcs.admin.catalog.domain.video.VideoGateway;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateMediaStatusUseCaseTest {
+public class UpdateMediaStatusUseCaseTest extends UseCaseTest {
 
     @Mock
     private VideoGateway videoGateway;
@@ -30,8 +30,8 @@ public class UpdateMediaStatusUseCaseTest {
     @InjectMocks
     private DefaultUpdateMediaStatusUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(videoGateway);
     }
 

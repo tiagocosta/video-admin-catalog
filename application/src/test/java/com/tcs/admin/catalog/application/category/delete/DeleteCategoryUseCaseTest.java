@@ -1,10 +1,10 @@
 package com.tcs.admin.catalog.application.category.delete;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.category.Category;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteCategoryUseCaseTest {
+public class DeleteCategoryUseCaseTest extends UseCaseTest {
 
     @Mock
     private CategoryGateway categoryGateway;
@@ -24,8 +24,8 @@ public class DeleteCategoryUseCaseTest {
     @InjectMocks
     private DefaultDeleteCategoryUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(categoryGateway);
     }
 

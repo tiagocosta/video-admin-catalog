@@ -1,5 +1,6 @@
 package com.tcs.admin.catalog;
 
+import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -17,5 +18,6 @@ import java.lang.annotation.*;
         includeFilters = {
             @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
 })
+@Tag("integrationTest")
 public @interface MySQLGatewayTest {
 }

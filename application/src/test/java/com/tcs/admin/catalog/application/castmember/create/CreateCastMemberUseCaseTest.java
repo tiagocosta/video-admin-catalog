@@ -1,11 +1,11 @@
 package com.tcs.admin.catalog.application.castmember.create;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.castmember.CastMemberGateway;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CreateCastMemberUseCaseTest {
+public class CreateCastMemberUseCaseTest extends UseCaseTest {
 
     @Mock
     private CastMemberGateway castMemberGateway;
@@ -29,8 +29,8 @@ public class CreateCastMemberUseCaseTest {
     @InjectMocks
     private DefaultCreateCastMemberUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(castMemberGateway);
     }
 

@@ -1,10 +1,10 @@
 package com.tcs.admin.catalog.application.genre.delete;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import com.tcs.admin.catalog.domain.genre.GenreID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteGenreUseCaseTest {
+public class DeleteGenreUseCaseTest extends UseCaseTest {
 
     @Mock
     private GenreGateway genreGateway;
@@ -24,8 +24,8 @@ public class DeleteGenreUseCaseTest {
     @InjectMocks
     private DefaultDeleteGenreUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(genreGateway);
     }
 

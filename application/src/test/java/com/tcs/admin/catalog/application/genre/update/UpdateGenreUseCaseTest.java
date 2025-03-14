@@ -1,16 +1,12 @@
 package com.tcs.admin.catalog.application.genre.update;
 
-import com.tcs.admin.catalog.application.category.update.DefaultUpdateCategoryUseCase;
-import com.tcs.admin.catalog.application.category.update.UpdateCategoryCommand;
-import com.tcs.admin.catalog.domain.category.Category;
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.category.CategoryGateway;
 import com.tcs.admin.catalog.domain.category.CategoryID;
-import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
 import com.tcs.admin.catalog.domain.genre.Genre;
 import com.tcs.admin.catalog.domain.genre.GenreGateway;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +15,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateGenreUseCaseTest {
+public class UpdateGenreUseCaseTest extends UseCaseTest {
 
     @Mock
     private GenreGateway genreGateway;
@@ -40,8 +35,8 @@ public class UpdateGenreUseCaseTest {
     @InjectMocks
     private DefaultUpdateGenreUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(genreGateway, categoryGateway);
     }
 
@@ -244,9 +239,4 @@ public class UpdateGenreUseCaseTest {
         Mockito.verify(genreGateway, times(0)).update(any());
     }
 
-    private List<String> asString(final List<CategoryID> categories) {
-        return categories.stream()
-                .map(CategoryID::getValue)
-                .toList();
-    }
 }

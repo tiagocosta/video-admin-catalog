@@ -1,10 +1,10 @@
 package com.tcs.admin.catalog.application.video.delete;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.video.MediaResourceGateway;
 import com.tcs.admin.catalog.domain.video.VideoGateway;
 import com.tcs.admin.catalog.domain.video.VideoID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteVideoUseCaseTest {
+public class DeleteVideoUseCaseTest extends UseCaseTest {
 
     @Mock
     private VideoGateway videoGateway;
@@ -27,8 +27,8 @@ public class DeleteVideoUseCaseTest {
     @InjectMocks
     private DefaultDeleteVideoUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(videoGateway, mediaResourceGateway);
     }
 

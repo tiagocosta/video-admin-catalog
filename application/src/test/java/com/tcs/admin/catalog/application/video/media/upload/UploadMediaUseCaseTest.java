@@ -1,5 +1,6 @@
 package com.tcs.admin.catalog.application.video.media.upload;
 
+import com.tcs.admin.catalog.application.UseCaseTest;
 import com.tcs.admin.catalog.domain.Fixture;
 import com.tcs.admin.catalog.domain.exceptions.NotFoundException;
 import com.tcs.admin.catalog.domain.video.MediaResourceGateway;
@@ -7,7 +8,6 @@ import com.tcs.admin.catalog.domain.video.MediaType;
 import com.tcs.admin.catalog.domain.video.VideoGateway;
 import com.tcs.admin.catalog.domain.video.VideoResource;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UploadMediaUseCaseTest {
+public class UploadMediaUseCaseTest extends UseCaseTest {
 
     @Mock
     private MediaResourceGateway mediaResourceGateway;
@@ -34,8 +34,8 @@ public class UploadMediaUseCaseTest {
     @InjectMocks
     private DefaultUploadMediaUseCase useCase;
 
-    @BeforeEach
-    void cleanUp() {
+    @Override
+    protected void cleanUp() {
         Mockito.reset(mediaResourceGateway, videoGateway);
     }
 
