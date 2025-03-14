@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class EntityTest extends UnitTest {
+public class EntityTest extends DomainTest {
 
     @Test
     public void givenNullAsEvents_whenInstantiate_thenOk() {

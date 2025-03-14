@@ -1,10 +1,10 @@
 package com.tcs.admin.catalog.domain.video;
 
-import com.tcs.admin.catalog.domain.UnitTest;
+import com.tcs.admin.catalog.domain.DomainTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ImageMediaTest extends UnitTest {
+class ImageMediaTest extends DomainTest {
 
     @Test
     public void givenValidParams_whenCallsNewImage_thenInstantiateIt() {

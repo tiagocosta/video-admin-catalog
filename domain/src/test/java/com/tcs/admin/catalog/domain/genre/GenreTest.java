@@ -1,6 +1,6 @@
 package com.tcs.admin.catalog.domain.genre;
 
-import com.tcs.admin.catalog.domain.UnitTest;
+import com.tcs.admin.catalog.domain.DomainTest;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
 import com.tcs.admin.catalog.domain.exceptions.NotificationException;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenreTest extends UnitTest {
+public class GenreTest extends DomainTest {
 
     @Test
     public void givenValidParams_whenCallNewGenre_thenInstantiateGenre() {

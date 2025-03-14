@@ -1,6 +1,6 @@
 package com.tcs.admin.catalog.domain.video;
 
-import com.tcs.admin.catalog.domain.UnitTest;
+import com.tcs.admin.catalog.domain.DomainTest;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.genre.GenreID;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Year;
 import java.util.Set;
 
-public class VideoTest extends UnitTest {
+public class VideoTest extends DomainTest {
 
     @Test
     public void givenValidParams_whenCallsNewVideo_thenInstantiateIt() {

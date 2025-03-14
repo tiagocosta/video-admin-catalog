@@ -1,12 +1,12 @@
 package com.tcs.admin.catalog.domain.category;
 
-import com.tcs.admin.catalog.domain.UnitTest;
+import com.tcs.admin.catalog.domain.DomainTest;
 import com.tcs.admin.catalog.domain.exceptions.DomainException;
 import com.tcs.admin.catalog.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CategoryTest extends UnitTest {
+public class CategoryTest extends DomainTest {
 
     @Test
     public void givenValidParams_whenCallNewCategory_thenInstantiateCategory() {
