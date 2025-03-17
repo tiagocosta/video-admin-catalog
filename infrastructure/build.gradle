@@ -42,12 +42,16 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-jpa')
     implementation('org.springframework.boot:spring-boot-starter-amqp')
 
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation('org.springframework.boot:spring-boot-starter-oauth2-resource-server')
+
     implementation('com.fasterxml.jackson.module:jackson-module-afterburner')
 
     testImplementation('org.flywaydb:flyway-core')
     testImplementation('org.flywaydb:flyway-mysql')
     testImplementation('org.springframework.amqp:spring-rabbit-test:3.2.2')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
 
     testImplementation('org.springframework.boot:spring-boot-testcontainers')
     testImplementation('org.testcontainers:junit-jupiter')
