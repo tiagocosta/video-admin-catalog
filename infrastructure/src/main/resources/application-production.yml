@@ -4,6 +4,10 @@ amqp:
   username: ${AMQP_RABBIT_USERNAME}
   password: ${AMQP_RABBIT_PASSWORD}
 
+keycloak:
+  realm: ${KEYCLOAK_REALM:tcs-codeflix}
+  host: ${KEYCLOAK_HOST:http:://localhost:8443}
+
 mysql:
   username: ${MYSQL_USERNAME}
   password: ${MYSQL_PASSWORD}

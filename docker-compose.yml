@@ -1,22 +1,22 @@
 version: '3.7'
 
 services:
-  app:
-    container_name: video_adm_app
-    build: .
-#    image: cstiago/video-admin-catalog-java:master-1
-    profiles:
-      - "app"
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - 8080:8080
-    depends_on:
-      - mysql
-      - rabbitmq
-    networks:
-      - videos_adm_network
+#  app:
+#    container_name: video_adm_app
+#    build: .
+##    image: cstiago/video-admin-catalog-java:master-1
+#    profiles:
+#      - "app"
+#    restart: unless-stopped
+#    env_file:
+#      - .env
+#    ports:
+#      - 8080:8080
+#    depends_on:
+#      - mysql
+#      - rabbitmq
+#    networks:
+#      - videos_adm_network
 
   mysql:
     container_name: videos_adm_mysql
