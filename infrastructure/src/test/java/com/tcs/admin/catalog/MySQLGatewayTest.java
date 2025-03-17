@@ -15,8 +15,9 @@ import java.lang.annotation.*;
 @DataJpaTest
 @ComponentScan(
         basePackages = "com.tcs.admin.catalog",
+        useDefaultFilters = false,
         includeFilters = {
-            @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")
+            @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*MySQLGateway")
 })
 @Tag("integrationTest")
 public @interface MySQLGatewayTest {

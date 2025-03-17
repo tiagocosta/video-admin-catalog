@@ -1,5 +1,6 @@
 package com.tcs.admin.catalog.e2e;
 
+import com.tcs.admin.catalog.ApiTest;
 import com.tcs.admin.catalog.domain.Identifier;
 import com.tcs.admin.catalog.domain.castmember.CastMemberID;
 import com.tcs.admin.catalog.domain.castmember.CastMemberType;
@@ -169,6 +170,7 @@ public interface MockDsl {
 
     private String given(final String url, final Object requestBody) throws Exception {
         final var aRequest = post(url)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(requestBody));
 
@@ -181,6 +183,7 @@ public interface MockDsl {
 
     private ResultActions givenResult(final String url, final Object requestBody) throws Exception {
         final var aRequest = post(url)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(requestBody));
 
@@ -196,6 +199,7 @@ public interface MockDsl {
             final String direction
     ) throws Exception {
         final var aRequest = get(url)
+                .with(ApiTest.ADMIN_JWT)
                 .queryParam("page", String.valueOf(page))
                 .queryParam("perPage", String.valueOf(perPage))
                 .queryParam("search", search)
@@ -208,6 +212,7 @@ public interface MockDsl {
 
     private <T> T retrieve(final String url, final Identifier anId, final Class<T> clazz) throws Exception {
         final var aRequest = get("%s/{id}".formatted(url), anId.getValue())
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         final var json = this.mvc().perform(aRequest)
@@ -220,19 +225,22 @@ public interface MockDsl {
 
     private ResultActions retrieveResult(final String url, final Identifier anId) throws Exception {
         final var aRequest = get("%s/{id}".formatted(url), anId.getValue())
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         return this.mvc().perform(aRequest);
     }
 
     private ResultActions delete(final String url, final Identifier anId) throws Exception {
-        final var aRequest = MockMvcRequestBuilders.delete("%s/{id}".formatted(url), anId.getValue());
+        final var aRequest = MockMvcRequestBuilders.delete("%s/{id}".formatted(url), anId.getValue())
+                .with(ApiTest.ADMIN_JWT);
 
         return this.mvc().perform(aRequest);
     }
 
     private ResultActions update(final String url, final Identifier anId, final Object requestBody) throws Exception {
         final var aRequest = MockMvcRequestBuilders.put("%s/{id}".formatted(url), anId.getValue())
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Json.writeValueAsString(requestBody));
 

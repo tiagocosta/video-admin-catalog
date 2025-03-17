@@ -1,5 +1,6 @@
 package com.tcs.admin.catalog.e2e.genre;
 
+import com.tcs.admin.catalog.ApiTest;
 import com.tcs.admin.catalog.E2ETest;
 import com.tcs.admin.catalog.domain.category.CategoryID;
 import com.tcs.admin.catalog.domain.genre.GenreID;
@@ -219,6 +220,7 @@ public class GenreE2ETest implements MockDsl {
         Assertions.assertEquals(0, this.genreRepository.count());
 
         final var aRequest = MockMvcRequestBuilders.get("/genres/123")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         final var json = this.mvc.perform(aRequest)

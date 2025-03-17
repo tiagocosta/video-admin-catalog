@@ -1,5 +1,6 @@
 package com.tcs.admin.catalog.e2e.category;
 
+import com.tcs.admin.catalog.ApiTest;
 import com.tcs.admin.catalog.E2ETest;
 import com.tcs.admin.catalog.e2e.MockDsl;
 import com.tcs.admin.catalog.infrastructure.category.models.UpdateCategoryRequest;
@@ -180,6 +181,7 @@ public class CategoryE2ETest implements MockDsl {
         Assertions.assertEquals(0, this.categoryRepository.count());
 
         final var aRequest = MockMvcRequestBuilders.get("/categories/123")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         final var json = this.mvc.perform(aRequest)
