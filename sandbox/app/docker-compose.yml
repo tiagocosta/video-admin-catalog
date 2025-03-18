@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: videos_adm_app
+    build:
+      context: ../../
+      dockerfile: Dockerfile.dev
+#    image: cstiago/video-admin-catalog-java:master-1
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    ports:
+      - "8080:8080"
+    networks:
+      - videos_adm_network
+
+networks:
+  videos_adm_network:
+  videos_adm_services:
+    external: true

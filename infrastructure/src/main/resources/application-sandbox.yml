@@ -1,0 +1,24 @@
+amqp:
+  admin:
+    auto-create: ${AMQP_ADMIN_AUTO_CREATE:true}
+  host: ${AMQP_HOST:localhost}
+  port: ${AMQP_PORT:5672}
+  username: ${AMQP_USERNAME:videos_adm}
+  password: ${AMQP_PASSWORD:123456}
+
+keycloak:
+  realm: ${KEYCLOAK_REALM:tcs-codeflix}
+  host: ${KEYCLOAK_HOST:http://localhost:8443}
+
+mysql:
+  username: ${MYSQL_USERNAME:root}
+  password: ${MYSQL_PASSWORD:123456}
+  schema: ${MYSQL_SCHEMA:videos_adm}
+  url: ${MYSQL_URL:localhost}:${MYSQL_PORT:3306}
+
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 10
+      io: 2

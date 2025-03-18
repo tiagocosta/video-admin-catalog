@@ -1,49 +1,36 @@
 version: '3.7'
 
 services:
-#  app:
-#    container_name: video_adm_app
-#    build: .
-##    image: cstiago/video-admin-catalog-java:master-1
-#    profiles:
-#      - "app"
-#    restart: unless-stopped
-#    env_file:
-#      - .env
-#    ports:
-#      - 8080:8080
-#    depends_on:
-#      - mysql
-#      - rabbitmq
-#    networks:
-#      - videos_adm_network
-
   mysql:
     container_name: videos_adm_mysql
     image: mysql:latest
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
-      - MYSQL_DATABASE=videos_adm
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: videos_adm
+      MYSQL_ROOT_HOST: '%'
     security_opt:
       - seccomp:unconfined
     ports:
-      - 3306:3306
+      - "3306:3306"
+    volumes:
+      - ../.docker/mysql:/var/lib/mysql:rw
     networks:
-      - videos_adm_network
+      - videos_adm_services
 
-  rabbitmq:
+  rabbit:
     container_name: videos_adm_rabbitmq
-    image: rabbitmq:3-management
+    image: rabbitmq:3.10.7-management
+    hostname: rabbit
     environment:
       - RABBITMQ_ERLANG_COOKIE=SWQOKODSQALRPCLNMEQG
       - RABBITMQ_DEFAULT_USER=videos_adm
       - RABBITMQ_DEFAULT_PASS=123456
       - RABBITMQ_DEFAULT_VHOST=/
     ports:
-      - 15672:15672
-      - 5672:5672
+      - "15672:15672"
+      - "5672:5672"
     networks:
-      - videos_adm_network
+      - videos_adm_services
 
   keycloak:
     container_name: videos_adm_keycloak
@@ -52,11 +39,15 @@ services:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
     ports:
-      - 8443:8080
+      - "8443:8080"
     command:
       - start-dev
+#      - "start-dev --hostname-url=http://keycloak:8080"
+    volumes:
+      - ../.docker/keycloak:/opt/keycloak/data/h2:rw
     networks:
-      - videos_adm_network
+      - videos_adm_services
 
 networks:
-  videos_adm_network:
+  videos_adm_services:
+    external: true

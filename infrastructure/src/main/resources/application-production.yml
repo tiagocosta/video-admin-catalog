@@ -1,8 +1,8 @@
 amqp:
-  host: ${AMQP_RABBIT_HOST}
-  port: ${AMQP_RABBIT_PORT}
-  username: ${AMQP_RABBIT_USERNAME}
-  password: ${AMQP_RABBIT_PASSWORD}
+  host: ${AMQP_HOST}
+  port: ${AMQP_PORT}
+  username: ${AMQP_USERNAME}
+  password: ${AMQP_PASSWORD}
 
 keycloak:
   realm: ${KEYCLOAK_REALM:tcs-codeflix}
