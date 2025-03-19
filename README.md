@@ -6,23 +6,14 @@ When the message arrives, the video encoder service (that is listening to that q
 After that, the encoder service publishes a message informing that the encoding process has been completed. The
 catalog administration service now knows that the video is ready to be streamed and updates its status.
 
-Moreover, there is a Kafka Connect plugged in this service to replicate the video catalog data to others services that need it.
-
-ps: this project is under development and uses concepts of Domain Driven Design and Clean Architecture
+This project uses concepts of Domain Driven Design and Clean Architecture.
 
 ## Dependencies
-Java 17
-
-Spring Boot 3
-
-RabbitMQ
-
-MySQL
-
-Flyway
-
-Test-containers
-
-Google Cloud Storage
-
-Kafka Connect
+- Java 17
+- Spring Boot 3
+- RabbitMQ
+- MySQL
+- Flyway
+- Test-containers
+- Google Cloud Storage
+- Elastic Stack (Elasticsearch, Kibana, Logstash and Filebeat)
